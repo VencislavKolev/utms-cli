@@ -1,13 +1,17 @@
 package jsonExport;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import entity.Status;
-import yamlImport.Project;
+import yamlImport.ImportProjectDto;
 
 import java.util.List;
 
 public class ReportDto {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String error;
+
     private Long runId;
-    private Project project;
+    private ImportProjectDto project;
     private Status status;
     private List<SuiteDto> suites;
 
@@ -22,11 +26,19 @@ public class ReportDto {
         this.runId = runId;
     }
 
-    public Project getProject() {
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public ImportProjectDto getProject() {
         return project;
     }
 
-    public void setProject(Project project) {
+    public void setProject(ImportProjectDto project) {
         this.project = project;
     }
 
@@ -46,3 +58,4 @@ public class ReportDto {
         this.suites = suites;
     }
 }
+

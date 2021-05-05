@@ -6,24 +6,24 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Suite {
+public class ImportSuiteDto {
 //
 //    private SuiteTest[] backEndTests;
 //    private SuiteTest[] uiTests;
-    private Map<String, SuiteTest[]> map;
+    private Map<String, ImportSuiteTestDto[]> map;
     //private Map<String, Map<String, TestDetail>> backEndTestMap;
 
-    public Suite() {
+    public ImportSuiteDto() {
         this.map = new HashMap<>();
     }
 
     @JsonAnyGetter
-    public Map<String, SuiteTest[]> getMap() {
+    public Map<String, ImportSuiteTestDto[]> getMap() {
         return map;
     }
 
     @JsonAnySetter
-    private void setBackEndTestMap(String key, SuiteTest[] value) {
+    private void setBackEndTestMap(String key, ImportSuiteTestDto[] value) {
         this.map.put(key, value);
     }
 

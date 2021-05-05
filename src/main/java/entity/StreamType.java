@@ -1,5 +1,5 @@
 package entity;
 
-public enum Stream {
+public enum StreamType {
     INPUT, ERROR
 }

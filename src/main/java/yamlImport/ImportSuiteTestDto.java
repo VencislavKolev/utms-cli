@@ -6,20 +6,20 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SuiteTest {
-    private final Map<String, TestDetail> tests;
+public class ImportSuiteTestDto {
+    private final Map<String, ImportTestDetailDto> tests;
 
-    public SuiteTest() {
+    public ImportSuiteTestDto() {
         this.tests = new HashMap<>();
     }
 
     @JsonAnyGetter
-    public Map<String, TestDetail> getTests() {
+    public Map<String, ImportTestDetailDto> getTests() {
         return tests;
     }
 
     @JsonAnySetter
-    public void setTest(String name, TestDetail values) {
+    public void setTest(String name, ImportTestDetailDto values) {
         this.tests.put(name, values);
     }
 }

@@ -2,8 +2,8 @@ package util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import yamlImport.Suite;
-import yamlImport.SuiteTest;
+import yamlImport.ImportSuiteDto;
+import yamlImport.ImportSuiteTestDto;
 import yamlImport.YamlDto;
 
 import java.io.File;
@@ -14,12 +14,12 @@ public class YamlUtilImpl implements YamlUtil {
 
     @Override
     public void traverseSuites(YamlDto yaml) {
-        for (Suite suite : yaml.getSuites()) {
+        for (ImportSuiteDto suite : yaml.getSuites()) {
             suite.getMap().forEach((key, value) -> {
                 System.out.println(key);
 
                 Arrays.stream(value)
-                        .map(SuiteTest::getTests)
+                        .map(ImportSuiteTestDto::getTests)
                         .flatMap(tests -> tests.entrySet().stream())
                         .forEach(kvp -> System.out.printf("Name: %s - %s%n", kvp.getKey(), kvp.getValue()));
             });

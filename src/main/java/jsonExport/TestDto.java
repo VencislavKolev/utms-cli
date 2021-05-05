@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class TestDto {
     private String name;
     @JsonProperty(value = "details")
-    private OutputTestDetailDto testDetailDto;
+    private TestDetailsInfoDto testDetailDto;
 
     public TestDto() {
     }
@@ -18,11 +18,11 @@ public class TestDto {
         this.name = name;
     }
 
-    public OutputTestDetailDto getTestDetailDto() {
+    public TestDetailsInfoDto getTestDetailDto() {
         return testDetailDto;
     }
 
-    public void setTestDetailDto(OutputTestDetailDto testDetailDto) {
+    public void setTestDetailDto(TestDetailsInfoDto testDetailDto) {
         this.testDetailDto = testDetailDto;
     }
 }

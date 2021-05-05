@@ -7,12 +7,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import entity.Status;
 import jsonExport.ReportDto;
 import jsonExport.SuiteDto;
-import jsonExport.OutputTestDetailDto;
+import jsonExport.TestDetailsInfoDto;
 import jsonExport.TestDto;
 import service.CommandExecutor;
 import service.JsonReportService;
-import util.YamlUtil;
-import util.YamlUtilImpl;
 import yamlImport.*;
 
 import java.util.ArrayList;
@@ -63,7 +61,7 @@ public class JsonReportServiceImpl implements JsonReportService {
     }
 
     @Override
-    public Project getProject(YamlDto yamlDto) {
+    public ImportProjectDto getProject(YamlDto yamlDto) {
         return yamlDto.getProject();
     }
 
@@ -71,7 +69,7 @@ public class JsonReportServiceImpl implements JsonReportService {
     public List<SuiteDto> provideSuites(YamlDto yamlDto) {
         List<SuiteDto> suites = new ArrayList<>();
 
-        for (Suite suite : yamlDto.getSuites()) {
+        for (ImportSuiteDto suite : yamlDto.getSuites()) {
             suite.getMap().forEach((key, value) -> {
 
                 SuiteDto suiteDto = new SuiteDto();
@@ -86,21 +84,21 @@ public class JsonReportServiceImpl implements JsonReportService {
     }
 
     @Override
-    public List<TestDto> provideTests(SuiteTest[] suiteTests, SuiteDto suiteDto) {
+    public List<TestDto> provideTests(ImportSuiteTestDto[] suiteTests, SuiteDto suiteDto) {
         List<TestDto> testDtos = new ArrayList<>();
 
-        Map<String, TestDetail> stringTestDetailMap = Arrays.stream(suiteTests)
-                .map(SuiteTest::getTests)
+        Map<String, ImportTestDetailDto> stringTestDetailMap = Arrays.stream(suiteTests)
+                .map(ImportSuiteTestDto::getTests)
                 .flatMap(tests -> tests.entrySet().stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        for (Map.Entry<String, TestDetail> map : stringTestDetailMap.entrySet()) {
+        for (Map.Entry<String, ImportTestDetailDto> map : stringTestDetailMap.entrySet()) {
             TestDto testDto = new TestDto();
             testDto.setName(map.getKey());
 
             //TestDto ---> "Test1": {
             try {
-                OutputTestDetailDto currentTest = this.commandExecutor.testParser(map.getValue());
+                TestDetailsInfoDto currentTest = this.commandExecutor.testParser(map.getValue());
                 testDto.setTestDetailDto(currentTest);
 
                 if (currentTest.getStatus().equals(Status.FAILED) && suiteDto.getStatus().equals(Status.PASSED)) {

@@ -1,10 +1,10 @@
 package yamlImport;
 
-public class Project {
+public class ImportProjectDto {
         private String name;
         private String description;
 
-    public Project() {
+    public ImportProjectDto() {
     }
 
     public String getName() {

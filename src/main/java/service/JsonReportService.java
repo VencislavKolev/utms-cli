@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jsonExport.ReportDto;
 import jsonExport.SuiteDto;
 import jsonExport.TestDto;
-import yamlImport.Project;
-import yamlImport.SuiteTest;
+import yamlImport.ImportProjectDto;
+import yamlImport.ImportSuiteTestDto;
 import yamlImport.YamlDto;
 
 import java.util.List;
@@ -16,9 +16,9 @@ public interface JsonReportService {
 
     ReportDto generateReport(YamlDto yamlDto);
 
-    Project getProject(YamlDto yamlDto);
+    ImportProjectDto getProject(YamlDto yamlDto);
 
     List<SuiteDto> provideSuites(YamlDto yamlDto);
 
-    List<TestDto> provideTests(SuiteTest[] suiteTests, SuiteDto suiteDto);
+    List<TestDto> provideTests(ImportSuiteTestDto[] suiteTests, SuiteDto suiteDto);
 }

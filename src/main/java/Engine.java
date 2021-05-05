@@ -13,6 +13,7 @@ import java.util.Map;
 public class Engine implements Runnable {
 
     private static final String YAML_FILEPATH = "src/main/resources/testing.yaml";
+    private static final String INVALID_YAML_FILEPATH = "src/main/resources/not-valid-testing.yaml";
 
     private final YamlUtil yamlParser;
     private final JsonReportService jsonReportService;
@@ -46,7 +47,7 @@ public class Engine implements Runnable {
     }
 
     private void parseYamlWithJackson() throws IOException {
-        File file = new File(YAML_FILEPATH);
+        File file = new File(INVALID_YAML_FILEPATH);
         ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
         //objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         YamlDto yaml = objectMapper.readValue(file, YamlDto.class);
@@ -69,7 +70,7 @@ public class Engine implements Runnable {
     private InputStream getInputStream() {
         InputStream inputStream = null;
         try {
-            inputStream = new FileInputStream(new File(YAML_FILEPATH));
+            inputStream = new FileInputStream(new File(INVALID_YAML_FILEPATH));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

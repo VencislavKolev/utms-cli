@@ -1,21 +1,24 @@
 package jsonExport;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import entity.Status;
 
 import java.time.LocalDateTime;
 
-public class OutputTestDetailDto {
+public class TestDetailsInfoDto {
     private String description;
+    //  @JsonProperty(defaultValue = "")
     private String output;
+    //  @JsonProperty(defaultValue = "")
     private String error;
     private Status status;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    public OutputTestDetailDto() {
+    public TestDetailsInfoDto() {
     }
 
-    public OutputTestDetailDto(String description, String output, String error, Status status, LocalDateTime startDate, LocalDateTime endDate) {
+    public TestDetailsInfoDto(String description, String output, String error, Status status, LocalDateTime startDate, LocalDateTime endDate) {
         this.description = description;
         this.output = output;
         this.error = error;

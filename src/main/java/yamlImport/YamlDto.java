@@ -3,25 +3,25 @@ package yamlImport;
 import java.util.List;
 
 public class YamlDto {
-    private Project project;
-    private List<Suite> suites;
+    private ImportProjectDto project;
+    private List<ImportSuiteDto> suites;
 
     public YamlDto() {
     }
 
-    public Project getProject() {
+    public ImportProjectDto getProject() {
         return project;
     }
 
-    public void setProject(Project value) {
+    public void setProject(ImportProjectDto value) {
         this.project = value;
     }
 
-    public List<Suite> getSuites() {
+    public List<ImportSuiteDto> getSuites() {
         return suites;
     }
 
-    public void setSuites(List<Suite> suites) {
+    public void setSuites(List<ImportSuiteDto> suites) {
         this.suites = suites;
     }
 }

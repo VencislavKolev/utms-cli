@@ -1,12 +1,12 @@
 package yamlImport;
 
-public class TestDetail {
+public class ImportTestDetailDto {
 
     private boolean enabled;
     private String command;
     private String description;
 
-    public TestDetail() {
+    public ImportTestDetailDto() {
     }
 
     public boolean getEnabled() {

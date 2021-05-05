@@ -1,10 +1,10 @@
 package service.impl;
 
 import entity.Status;
-import entity.Stream;
-import jsonExport.OutputTestDetailDto;
+import entity.StreamType;
+import jsonExport.TestDetailsInfoDto;
 import service.CommandExecutor;
-import yamlImport.TestDetail;
+import yamlImport.ImportTestDetailDto;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,10 +17,10 @@ public class CommandExecutorImpl implements CommandExecutor {
     private static final String PREFIX = "cmd.exe /c ";
 
     @Override
-    public OutputTestDetailDto testParser(TestDetail detail) throws InterruptedException, IOException {
+    public TestDetailsInfoDto testParser(ImportTestDetailDto detail) throws InterruptedException, IOException {
 
         if (!detail.getEnabled()) {
-            return new OutputTestDetailDto(null, null, null, Status.SKIPPED, null, null);
+            return new TestDetailsInfoDto(null, null, null, Status.SKIPPED, null, null);
         }
 
         String description = detail.getDescription();
@@ -30,27 +30,30 @@ public class CommandExecutorImpl implements CommandExecutor {
 
         LocalDateTime startDate = LocalDateTime.now();
         Runtime run = Runtime.getRuntime();
-         Process process = run.exec(PREFIX + detail.getCommand());
+        //TODO check if PREFIX is required
+        Process process = run.exec(PREFIX + detail.getCommand());
 
-       // Process process = run.exec(PREFIX + "ls");
+//        String commandArray[] = {"cmd", "/c", "dir", "C:\\Program Files"};
+//        String command = "ping www.codejava.net";
+//        Process process = run.exec(command);
+
         int exitValue = process.waitFor();
 
         if (exitValue == 0) {
-            String originalOutput = getOutput(process, Stream.INPUT);
+            String originalOutput = getOutput(process, StreamType.INPUT);
             encodedOutput = this.encodeString(originalOutput);
             status = Status.PASSED;
         } else {
-            String originalError = getOutput(process, Stream.ERROR);
+            String originalError = getOutput(process, StreamType.ERROR);
             encodedError = this.encodeString(originalError);
             status = Status.FAILED;
         }
-
         LocalDateTime endDate = LocalDateTime.now();
 
-        return new OutputTestDetailDto(description, encodedOutput, encodedError, status, startDate, endDate);
+        return new TestDetailsInfoDto(description, encodedOutput, encodedError, status, startDate, endDate);
     }
 
-    private String getOutput(Process process, Stream option) throws IOException {
+    private String getOutput(Process process, StreamType option) throws IOException {
         InputStreamReader streamReader = getStreamReader(process, option);
 
         StringBuilder builder = new StringBuilder();
@@ -62,10 +65,10 @@ public class CommandExecutorImpl implements CommandExecutor {
         return builder.toString().trim();
     }
 
-    private InputStreamReader getStreamReader(Process process, Stream option) {
+    private InputStreamReader getStreamReader(Process process, StreamType option) {
         InputStreamReader streamReader;
 
-        if (option.equals(Stream.INPUT)) {
+        if (option.equals(StreamType.INPUT)) {
             streamReader = new InputStreamReader(process.getInputStream());
         } else {
             streamReader = new InputStreamReader(process.getErrorStream());
