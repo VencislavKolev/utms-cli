@@ -11,9 +11,9 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.*;
 import java.util.Map;
 
-public class Engine{
+public class Engine {
 
-    private static final String YAML_FILEPATH = "src/main/resources/testing.yaml";
+    private static final String YAML_FILEPATH = "src/main/resources./testing.yaml";
     private static final String TESTING2 = "src/main/resources/testing2.yaml";
 
     private static final String INVALID_YAML = "src/main/resources/not-valid-testing.yaml";
@@ -29,6 +29,7 @@ public class Engine{
 
 
     public void run(String[] args) {
+
 
         // this.readYamlAsMap();
 
@@ -57,11 +58,17 @@ public class Engine{
 //            e.printStackTrace();
 //        }
 
+//        var path = args[0];
+//        var runId = args[1];
         try {
-            Object object = this.jsonReportService.processInput(NONEXISTING_YAML, "2");
+            Object object = this.jsonReportService.processInput(args);
+            // Object object = this.jsonReportService.processInput(YAML_FILEPATH, "1");
             this.jsonReportService.printJsonString(object);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        for(String arg : args) {
+            System.out.println(arg);
         }
     }
 

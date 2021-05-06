@@ -22,6 +22,8 @@ public class JsonReportServiceImpl implements JsonReportService {
     private final CommandExecutor commandExecutor;
     // private final FileUtil fileUtil;
 
+    private static final String DIR_PREFIX = "src/main/resources/";
+
     public JsonReportServiceImpl() {
         yamlUtil = new YamlUtilImpl();
         commandExecutor = new CommandExecutorImpl();
@@ -88,7 +90,7 @@ public class JsonReportServiceImpl implements JsonReportService {
     public Object processInput(String... args) throws IOException {
         //----------------------------------------------------------------------
 
-        var filePath = args[0];
+        var filePath = DIR_PREFIX + args[0];
         var inputRunId = args[1];
         boolean isNumber = this.isValidNumber(inputRunId);
         if (!isNumber) {
