@@ -8,13 +8,20 @@ import yamlImport.ImportProjectDto;
 import yamlImport.ImportSuiteTestDto;
 import yamlImport.YamlDto;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface JsonReportService {
 
     void generateJson(YamlDto yamlDto) throws JsonProcessingException;
 
-    ReportDto generateReport(YamlDto yamlDto);
+    void generateJson(String filePath, String runId) throws IOException;
+
+    void printJsonString(Object obj) throws JsonProcessingException;
+
+    Object processInput(String... args) throws IOException;
+
+    ReportDto generateReport(YamlDto yamlDto, Long runId);
 
     ImportProjectDto getProject(YamlDto yamlDto);
 

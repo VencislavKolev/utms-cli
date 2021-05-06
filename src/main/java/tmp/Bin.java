@@ -47,3 +47,10 @@
 //  .forEach(kvp -> System.out.printf("Name: %s - %s%n", kvp.getKey(), kvp.getValue()));
 //                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 //}
+
+//        try {
+//            this.yamlUtil.parseYamlWithJackson(filePath);
+//        } catch (IOException e) {
+//           // e.printStackTrace();
+//            this.printJsonString(new ErrorDto("Configuration file is not valid."));
+//        }

@@ -40,12 +40,12 @@ public class CommandExecutorImpl implements CommandExecutor {
         int exitValue = process.waitFor();
 
         if (exitValue == 0) {
-            String originalOutput = getOutput(process, StreamType.INPUT);
-            encodedOutput = this.encodeString(originalOutput);
+            String originalOutput = this.getCommandOutput(process, StreamType.INPUT);
+            encodedOutput = this.encodeToBase64(originalOutput);
             status = Status.PASSED;
         } else {
-            String originalError = getOutput(process, StreamType.ERROR);
-            encodedError = this.encodeString(originalError);
+            String originalError = this.getCommandOutput(process, StreamType.ERROR);
+            encodedError = this.encodeToBase64(originalError);
             status = Status.FAILED;
         }
         LocalDateTime endDate = LocalDateTime.now();
@@ -53,11 +53,11 @@ public class CommandExecutorImpl implements CommandExecutor {
         return new TestDetailsInfoDto(description, encodedOutput, encodedError, status, startDate, endDate);
     }
 
-    private String getOutput(Process process, StreamType option) throws IOException {
-        InputStreamReader streamReader = getStreamReader(process, option);
+    private String getCommandOutput(Process process, StreamType streamType) throws IOException {
+        InputStreamReader streamReader = getStreamReader(process, streamType);
+        BufferedReader reader = new BufferedReader(streamReader);
 
         StringBuilder builder = new StringBuilder();
-        BufferedReader reader = new BufferedReader(streamReader);
         String line;
         while ((line = reader.readLine()) != null) {
             builder.append(line).append(System.lineSeparator());
@@ -65,10 +65,10 @@ public class CommandExecutorImpl implements CommandExecutor {
         return builder.toString().trim();
     }
 
-    private InputStreamReader getStreamReader(Process process, StreamType option) {
+    private InputStreamReader getStreamReader(Process process, StreamType streamType) {
         InputStreamReader streamReader;
 
-        if (option.equals(StreamType.INPUT)) {
+        if (streamType.equals(StreamType.INPUT)) {
             streamReader = new InputStreamReader(process.getInputStream());
         } else {
             streamReader = new InputStreamReader(process.getErrorStream());
@@ -76,7 +76,7 @@ public class CommandExecutorImpl implements CommandExecutor {
         return streamReader;
     }
 
-    private String encodeString(String originalOutput) {
+    private String encodeToBase64(String originalOutput) {
         return Base64.getEncoder().encodeToString(originalOutput.getBytes(StandardCharsets.UTF_8));
     }
 }

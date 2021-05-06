@@ -1,6 +1,10 @@
+import service.JsonReportService;
+import service.impl.JsonReportServiceImpl;
+
 public class App {
     public static void main(String[] args) {
-        Engine engine = new Engine();
-        engine.run();
+        JsonReportService jsonReportService = new JsonReportServiceImpl();
+        Engine engine = new Engine(jsonReportService);
+        engine.run(args);
     }
 }
