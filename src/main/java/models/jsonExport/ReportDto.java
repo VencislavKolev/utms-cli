@@ -1,18 +1,23 @@
 package models.jsonExport;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import models.enums.Status;
 import models.yamlImport.ImportProjectDto;
 
 import java.util.List;
 
-public class ReportDto {
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ReportDto extends BaseDto {
     private Long runId;
     private ImportProjectDto project;
     private Status status;
     private List<SuiteDto> suites;
 
     public ReportDto() {
+    }
+
+    public ReportDto(String error) {
+        super(error);
     }
 
     public Long getRunId() {

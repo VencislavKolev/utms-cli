@@ -7,4 +7,6 @@ import java.io.IOException;
 
 public interface CommandExecutor {
     TestDetailsInfoDto testParser(ImportTestDetailDto detail) throws InterruptedException, IOException;
+
+    TestDetailsInfoDto getSkippedTest(ImportTestDetailDto detail) throws InterruptedException, IOException;
 }

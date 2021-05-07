@@ -1,12 +1,12 @@
 package models.jsonExport;
 
-public class ErrorDto {
+public abstract class BaseDto {
     private String error;
 
-    public ErrorDto() {
+    public BaseDto() {
     }
 
-    public ErrorDto(String error) {
+    public BaseDto(String error) {
         this.error = error;
     }
 

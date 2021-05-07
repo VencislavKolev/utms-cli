@@ -1,6 +1,7 @@
 package service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import models.jsonExport.BaseDto;
 import models.jsonExport.ReportDto;
 import models.jsonExport.SuiteDto;
 import models.jsonExport.TestDto;
@@ -10,6 +11,7 @@ import models.yamlImport.YamlDto;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface JsonReportService {
 
@@ -23,9 +25,15 @@ public interface JsonReportService {
 
     ReportDto generateReport(YamlDto yamlDto, String runId);
 
+    ReportDto generateReport(YamlDto yamlDto, String runId, Map<String, String> commands);
+
     ImportProjectDto getProject(YamlDto yamlDto);
 
     List<SuiteDto> provideSuites(YamlDto yamlDto);
 
+    List<SuiteDto> provideSuites(YamlDto yamlDto, String suiteName);
+
     List<TestDto> provideTests(ImportSuiteTestDto[] suiteTests, SuiteDto suiteDto);
+
+    List<TestDto> provideTests(ImportSuiteTestDto[] suiteTests, SuiteDto suiteDto, boolean run);
 }

@@ -5,5 +5,8 @@ public class GlobalConstants {
     public static final String NOT_FOUND_CONFIG = "Configuration file not found.";
     public static final String INVALID_CONFIG_FILE = "Configuration file is not valid.";
 
-    public static String DEFAULT_CONFIG_FILE = "testing.yaml";
+    public static final String NOT_FOUND_TESTSUITE = "Test suite not found.";
+    public static final String NOT_FOUND_TEST = "Test not found.";
+
+    public final static String DEFAULT_CONFIG_FILE = "testing.yaml";
 }

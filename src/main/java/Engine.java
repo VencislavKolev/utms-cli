@@ -22,6 +22,10 @@ public class Engine {
             Object object = this.jsonReportService.processInput(args);
             //Object object = this.jsonReportService.processInput("--config", "testing.yaml", "--run-id", "1");
             //Object object = this.jsonReportService.processInput("--config", "skipping.yaml");
+
+            //------BONUS ARGUMENTS
+            //Object object = this.jsonReportService.processInput("--config", "testing.yaml", "--suite-name", "UITests");
+
             this.jsonReportService.printJsonString(object);
         } catch (IOException e) {
             e.printStackTrace();

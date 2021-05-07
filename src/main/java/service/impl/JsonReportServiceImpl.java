@@ -39,7 +39,6 @@ public class JsonReportServiceImpl implements JsonReportService {
         //--------------------------------TESTS--------------------------------------
         Map<String, String> cmdMap = this.getCommandsMap(args);
 
-        //   String cmdValue = this.getValue(args[0]);
 
         //---------------------------------CHECK RUN ID-------------------------------------
         //var filePath = DIR_PREFIX + args[0];
@@ -50,8 +49,10 @@ public class JsonReportServiceImpl implements JsonReportService {
             //  var inputRunId = args[1];
             boolean isNumber = this.isValidNumber(inputRunId);
             if (!isNumber) {
-                return new ErrorDto(INVALD_RUN_ID);
+                return new ReportDto(INVALD_RUN_ID);
             }
+
+            cmdMap.remove(runCmd);
         }
         //----------------------------------CHECK IF FILE EXISTS------------------------------------
         var configCmd = "--config";
@@ -59,18 +60,26 @@ public class JsonReportServiceImpl implements JsonReportService {
 
         if (cmdMap.containsKey(configCmd)) {
             file = cmdMap.get(configCmd);
+
+            cmdMap.remove(configCmd);
         }
 
         if (getInputStream(file) == null) {
-            return new ErrorDto(NOT_FOUND_CONFIG);
+            return new ReportDto(NOT_FOUND_CONFIG);
         }
 
         if (!this.yamlUtil.checkYamlCompatibility(getInputStream(file), YamlDto.class)) {
-            return new ErrorDto(INVALID_CONFIG_FILE);
+            return new ReportDto(INVALID_CONFIG_FILE);
         }
         YamlDto yamlDto = this.yamlUtil.getYamlDtoFromYamlFile(getInputStream(file));
 
-        ReportDto reportDto = this.generateReport(yamlDto, inputRunId);
+        ReportDto reportDto;
+
+        if (cmdMap.isEmpty()) {
+            reportDto = this.generateReport(yamlDto, inputRunId);
+        } else {
+            reportDto = this.generateReport(yamlDto, inputRunId, cmdMap);
+        }
 
         return reportDto;
 //        if (getInputStream(args[0]) == null) {
@@ -88,6 +97,7 @@ public class JsonReportServiceImpl implements JsonReportService {
 //        ReportDto reportDto = this.generateReport(yamlDto, runId);
 //        return reportDto;
     }
+
 
 //    private String getValue(String command) {
 //
@@ -108,6 +118,44 @@ public class JsonReportServiceImpl implements JsonReportService {
         Status status = this.setReportStatus(report.getSuites());
         report.setStatus(status);
         return report;
+    }
+
+    @Override
+    public ReportDto generateReport(YamlDto yamlDto, String runId, Map<String, String> commands) {
+        ReportDto report = new ReportDto();
+
+        if (runId != null) {
+            report.setRunId(Long.parseLong(runId));
+        }
+
+        List<SuiteDto> suites;
+
+        String suiteCmd = "--suite-name";
+        if (commands.containsKey(suiteCmd)) {
+            String suiteToRun = commands.get(suiteCmd);
+
+            boolean suiteExists = this.checkForExistingSuiteName(yamlDto, suiteToRun);
+            if (!suiteExists) {
+                report.setError(NOT_FOUND_TESTSUITE);
+                return report;
+            }
+            suites = this.provideSuites(yamlDto, suiteToRun);
+        } else {
+            suites = this.provideSuites(yamlDto);
+        }
+
+        report.setSuites(suites);
+
+        Status status = this.setReportStatus(report.getSuites());
+        report.setStatus(status);
+        report.setProject(yamlDto.getProject());
+        return report;
+    }
+
+    private boolean checkForExistingSuiteName(YamlDto yamlDto, String suiteToRun) {
+        return yamlDto.getSuites()
+                .stream()
+                .anyMatch(s -> s.getMap().containsKey(suiteToRun));
     }
 
     private Status setReportStatus(List<SuiteDto> suites) {
@@ -168,7 +216,7 @@ public class JsonReportServiceImpl implements JsonReportService {
 
         boolean isNumber = this.isValidNumber(inputRunId);
         if (!isNumber) {
-            this.printJsonString(new ErrorDto("Run Id is not valid."));
+            this.printJsonString(new ReportDto("Run Id is not valid."));
         }
         // Long runId = Long.parseLong(inputRunId);
         //----------------------------------------------------------------------
@@ -186,7 +234,7 @@ public class JsonReportServiceImpl implements JsonReportService {
 //        }
 
         if (!this.yamlUtil.checkYamlCompatibility(file, YamlDto.class)) {
-            this.printJsonString(new ErrorDto("Configuration file is not valid."));
+            this.printJsonString(new ReportDto("Configuration file is not valid."));
         } else {
             //----------------------------------------------------------------------
             YamlDto yamlDto = this.yamlUtil.getYamlDtoFromYamlFile(filePath);
@@ -218,6 +266,26 @@ public class JsonReportServiceImpl implements JsonReportService {
     }
 
     @Override
+    public List<SuiteDto> provideSuites(YamlDto yamlDto, String suiteToRun) {
+        List<SuiteDto> suites = new ArrayList<>();
+
+        for (ImportSuiteDto suite : yamlDto.getSuites()) {
+            suite.getMap().forEach((key, value) -> {
+
+                SuiteDto suiteDto = new SuiteDto();
+                suiteDto.setName(key);
+
+                boolean run = key.equals(suiteToRun) ? true : false;
+
+                List<TestDto> tests = this.provideTests(value, suiteDto, run);
+                suiteDto.setTests(tests);
+                suites.add(suiteDto);
+            });
+        }
+        return suites;
+    }
+
+    @Override
     public List<TestDto> provideTests(ImportSuiteTestDto[] suiteTests, SuiteDto suiteDto) {
         List<TestDto> testDtos = new ArrayList<>();
 
@@ -233,6 +301,46 @@ public class JsonReportServiceImpl implements JsonReportService {
             //TestDto ---> "Test1": {
             try {
                 TestDetailsInfoDto currentTest = this.commandExecutor.testParser(map.getValue());
+                testDto.setTestDetailDto(currentTest);
+
+                if (currentTest.getStatus().equals(Status.FAILED) && suiteDto.getStatus().equals(Status.PASSED)) {
+                    suiteDto.setStatus(Status.FAILED);
+                }
+
+                testDtos.add(testDto);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        boolean allSkipped = testDtos
+                .stream().allMatch(s -> s.getTestDetailDto().getStatus().equals(Status.SKIPPED));
+
+        if (allSkipped) {
+            suiteDto.setStatus(Status.SKIPPED);
+        }
+        return testDtos;
+    }
+
+    @Override
+    public List<TestDto> provideTests(ImportSuiteTestDto[] suiteTests, SuiteDto suiteDto, boolean run) {
+        List<TestDto> testDtos = new ArrayList<>();
+
+        Map<String, ImportTestDetailDto> stringTestDetailMap = Arrays.stream(suiteTests)
+                .map(ImportSuiteTestDto::getTests)
+                .flatMap(tests -> tests.entrySet().stream())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        for (Map.Entry<String, ImportTestDetailDto> map : stringTestDetailMap.entrySet()) {
+            TestDto testDto = new TestDto();
+            testDto.setName(map.getKey());
+
+            try {
+                TestDetailsInfoDto currentTest;
+                if (run == true) {
+                    currentTest = this.commandExecutor.testParser(map.getValue());
+                } else {
+                    currentTest = this.commandExecutor.getSkippedTest(map.getValue());
+                }
                 testDto.setTestDetailDto(currentTest);
 
                 if (currentTest.getStatus().equals(Status.FAILED) && suiteDto.getStatus().equals(Status.PASSED)) {

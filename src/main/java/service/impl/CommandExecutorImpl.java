@@ -54,6 +54,11 @@ public class CommandExecutorImpl implements CommandExecutor {
         return new TestDetailsInfoDto(description, encodedOutput, encodedError, status, startDate, endDate);
     }
 
+    @Override
+    public TestDetailsInfoDto getSkippedTest(ImportTestDetailDto detail) throws InterruptedException, IOException {
+        return new TestDetailsInfoDto(detail.getDescription(), null, null, Status.SKIPPED, null, null);
+    }
+
     private String getCommandOutput(Process process, StreamType streamType) throws IOException {
         InputStreamReader streamReader = this.getStreamReader(process, streamType);
         BufferedReader reader = new BufferedReader(streamReader);
