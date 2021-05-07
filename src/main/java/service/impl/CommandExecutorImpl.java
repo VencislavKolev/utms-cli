@@ -1,10 +1,10 @@
 package service.impl;
 
-import entity.Status;
-import entity.StreamType;
-import jsonExport.TestDetailsInfoDto;
+import models.enums.Status;
+import models.enums.StreamType;
+import models.jsonExport.TestDetailsInfoDto;
 import service.CommandExecutor;
-import yamlImport.ImportTestDetailDto;
+import models.yamlImport.ImportTestDetailDto;
 
 import java.io.BufferedReader;
 import java.io.IOException;

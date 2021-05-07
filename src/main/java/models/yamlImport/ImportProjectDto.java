@@ -1,4 +1,4 @@
-package yamlImport;
+package models.yamlImport;
 
 public class ImportProjectDto {
         private String name;

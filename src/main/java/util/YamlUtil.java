@@ -1,6 +1,6 @@
 package util;
 
-import yamlImport.YamlDto;
+import models.yamlImport.YamlDto;
 
 import java.io.File;
 import java.io.IOException;

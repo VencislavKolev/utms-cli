@@ -1,4 +1,4 @@
-package jsonExport;
+package models.jsonExport;
 
 public class ErrorDto {
     private String error;

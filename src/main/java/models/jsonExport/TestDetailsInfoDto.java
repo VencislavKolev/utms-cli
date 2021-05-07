@@ -1,7 +1,6 @@
-package jsonExport;
+package models.jsonExport;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import entity.Status;
+import models.enums.Status;
 
 import java.time.LocalDateTime;
 

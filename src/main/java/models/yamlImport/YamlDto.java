@@ -1,4 +1,4 @@
-package yamlImport;
+package models.yamlImport;
 
 import java.util.List;
 

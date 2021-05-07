@@ -1,12 +1,12 @@
 package service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jsonExport.ReportDto;
-import jsonExport.SuiteDto;
-import jsonExport.TestDto;
-import yamlImport.ImportProjectDto;
-import yamlImport.ImportSuiteTestDto;
-import yamlImport.YamlDto;
+import models.jsonExport.ReportDto;
+import models.jsonExport.SuiteDto;
+import models.jsonExport.TestDto;
+import models.yamlImport.ImportProjectDto;
+import models.yamlImport.ImportSuiteTestDto;
+import models.yamlImport.YamlDto;
 
 import java.io.IOException;
 import java.util.List;

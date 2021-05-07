@@ -1,4 +1,4 @@
-package jsonExport;
+package models.jsonExport;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import yamlImport.ImportSuiteDto;
-import yamlImport.ImportSuiteTestDto;
-import yamlImport.YamlDto;
+import models.yamlImport.ImportSuiteDto;
+import models.yamlImport.ImportSuiteTestDto;
+import models.yamlImport.YamlDto;
 
 import java.io.File;
 import java.io.IOException;

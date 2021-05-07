@@ -1,6 +1,6 @@
-package jsonExport;
+package models.jsonExport;
 
-import entity.Status;
+import models.enums.Status;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
-package jsonExport;
+package models.jsonExport;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import entity.Status;
-import yamlImport.ImportProjectDto;
+import models.enums.Status;
+import models.yamlImport.ImportProjectDto;
 
 import java.util.List;
 
