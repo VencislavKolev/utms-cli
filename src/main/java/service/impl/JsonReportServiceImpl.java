@@ -11,23 +11,61 @@ import yamlImport.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static common.GlobalConstants.*;
+
 public class JsonReportServiceImpl implements JsonReportService {
     private final YamlUtil yamlUtil;
     private final CommandExecutor commandExecutor;
-    // private final FileUtil fileUtil;
 
     private static final String DIR_PREFIX = "src/main/resources/";
 
-    public JsonReportServiceImpl() {
-        yamlUtil = new YamlUtilImpl();
-        commandExecutor = new CommandExecutorImpl();
-        // fileUtil = new FileUtilImpl();
+    public JsonReportServiceImpl(YamlUtil yamlUtil, CommandExecutor commandExecutor) {
+        this.yamlUtil = yamlUtil;
+        this.commandExecutor = commandExecutor;
+    }
+
+    @Override
+    public Object processInput(String... args) throws IOException {
+        //--------------------------------TESTS--------------------------------------
+
+        //---------------------------------CHECK RUN ID-------------------------------------
+        //var filePath = DIR_PREFIX + args[0];
+        var inputRunId = args[1];
+        boolean isNumber = this.isValidNumber(inputRunId);
+        if (!isNumber) {
+            return new ErrorDto(INVALD_RUN_ID);
+        }
+        //----------------------------------CHECK IF FILE EXISTS------------------------------------
+
+        if (getInputStream(args[0]) == null) {
+            return new ErrorDto(NOT_FOUND_CONFIG);
+        }
+//      //-----------------------------------CHECK IF FILE IS VALID-----------------------------------
+        if (!this.yamlUtil.checkYamlCompatibility(getInputStream(args[0]), YamlDto.class)) {
+            return new ErrorDto(INVALID_CONFIG_FILE);
+        }
+        //------------------------------------PARSE FILE TO DTO----------------------------------
+        YamlDto yamlDto = this.yamlUtil.getYamlDtoFromYamlFile(getInputStream(args[0]));
+
+        //-------------------------------------GENERATE REPORT OBJECT---------------------------------
+        Long runId = Long.parseLong(inputRunId);
+        ReportDto reportDto = this.generateReport(yamlDto, runId);
+        return reportDto;
+    }
+
+    @Override
+    public void printJsonString(Object obj) throws JsonProcessingException {
+        ObjectMapper mapper = JacksonMapper.getMapper();
+        String outputJson = mapper.writeValueAsString(obj);
+
+        System.out.println(outputJson);
     }
 
     @Override
@@ -76,47 +114,6 @@ public class JsonReportServiceImpl implements JsonReportService {
             ReportDto reportDto = this.generateReport(yamlDto, runId);
             this.printJsonString(reportDto);
         }
-    }
-
-    @Override
-    public void printJsonString(Object obj) throws JsonProcessingException {
-        ObjectMapper mapper = JacksonMapper.getMapper();
-        String outputJson = mapper.writeValueAsString(obj);
-
-        System.out.println(outputJson);
-    }
-
-    @Override
-    public Object processInput(String... args) throws IOException {
-        //----------------------------------------------------------------------
-
-        var filePath = DIR_PREFIX + args[0];
-        var inputRunId = args[1];
-        boolean isNumber = this.isValidNumber(inputRunId);
-        if (!isNumber) {
-            return new ErrorDto("Run Id is not valid.");
-        }
-        //----------------------------------------------------------------------
-
-        File file = new File(filePath);
-        if (!file.isFile()) {
-            return new ErrorDto("Configuration file not found.");
-        }
-//        if (!this.fileUtil.checkIfExists(filePath)) {
-//            return new ErrorDto("Configuration file not found.");
-//        }
-
-        //----------------------------------------------------------------------
-
-        if (!this.yamlUtil.checkYamlCompatibility(file, YamlDto.class)) {
-            return new ErrorDto("Configuration file is not valid.");
-        }
-        //----------------------------------------------------------------------
-        Long runId = Long.parseLong(inputRunId);
-        YamlDto yamlDto = this.yamlUtil.getYamlDtoFromYamlFile(file);
-        ReportDto reportDto = this.generateReport(yamlDto, runId);
-        return reportDto;
-
     }
 
     @Override
@@ -191,6 +188,10 @@ public class JsonReportServiceImpl implements JsonReportService {
             }
         }
         return testDtos;
+    }
+
+    private InputStream getInputStream(String arg) {
+        return this.getClass().getClassLoader().getResourceAsStream(arg);
     }
 
     private boolean isValidNumber(String str) {

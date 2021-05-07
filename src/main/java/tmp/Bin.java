@@ -54,3 +54,38 @@
 //           // e.printStackTrace();
 //            this.printJsonString(new ErrorDto("Configuration file is not valid."));
 //        }
+
+
+
+// this.readYamlAsMap();
+
+//        try {
+//            this.parseYamlWithJackson();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
+//---------NEW-------------
+//        YamlDto yamlDto = null;
+//        try {
+//            yamlDto = this.yamlParser.parseYamlWithJackson(TESTING2);
+//            this.jsonReportService.generateJson(yamlDto);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+//        try {
+//            this.jsonReportService.generateJson(NONEXISTING_YAML,"2");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+//        File file = new File(filePath);
+//        if (!file.isFile()) {
+//            return new ErrorDto("Configuration file not found.");
+//        }
+////        if (!this.fileUtil.checkIfExists(filePath)) {
+////            return new ErrorDto("Configuration file not found.");
+////        }
+//

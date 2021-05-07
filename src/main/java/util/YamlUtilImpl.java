@@ -10,6 +10,8 @@ import yamlImport.YamlDto;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
 
 public class YamlUtilImpl implements YamlUtil {
@@ -50,6 +52,16 @@ public class YamlUtilImpl implements YamlUtil {
     }
 
     @Override
+    public YamlDto getYamlDtoFromYamlFile(URL url) throws IOException {
+        return new ObjectMapper(new YAMLFactory()).readValue(url, YamlDto.class);
+    }
+
+    @Override
+    public YamlDto getYamlDtoFromYamlFile(InputStream inputStream) throws IOException {
+        return new ObjectMapper(new YAMLFactory()).readValue(inputStream, YamlDto.class);
+    }
+
+    @Override
     public boolean checkYamlCompatibility(File file, Class<?> aClass) throws IOException {
         //ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
@@ -61,5 +73,15 @@ public class YamlUtilImpl implements YamlUtil {
             return false;
         }
 
+    }
+
+    @Override
+    public boolean checkYamlCompatibility(InputStream inputStream, Class<?> aClass) throws IOException {
+        try {
+            new ObjectMapper(new YAMLFactory()).readValue(inputStream, YamlDto.class);
+            return true;
+        } catch (JsonParseException | JsonMappingException e) {
+            return false;
+        }
     }
 }
