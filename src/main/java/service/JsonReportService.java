@@ -21,7 +21,7 @@ public interface JsonReportService {
 
     Object processInput(String... args) throws IOException;
 
-    ReportDto generateReport(YamlDto yamlDto, Long runId);
+    ReportDto generateReport(YamlDto yamlDto, String runId);
 
     ImportProjectDto getProject(YamlDto yamlDto);
 

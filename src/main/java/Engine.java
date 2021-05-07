@@ -20,7 +20,8 @@ public class Engine {
 
         try {
             Object object = this.jsonReportService.processInput(args);
-            // Object object = this.jsonReportService.processInput("testing.yaml", "1");
+            //Object object = this.jsonReportService.processInput("--config", "testing.yaml", "--run-id", "1");
+            //Object object = this.jsonReportService.processInput("--config", "skipping.yaml");
             this.jsonReportService.printJsonString(object);
         } catch (IOException e) {
             e.printStackTrace();

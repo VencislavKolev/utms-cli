@@ -9,6 +9,7 @@ public class JacksonMapper {
 
     public static ObjectMapper getMapper() {
         ObjectMapper mapper = new ObjectMapper();
+
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.registerModule(new JavaTimeModule());
         mapper.writer(new DefaultPrettyPrinter());

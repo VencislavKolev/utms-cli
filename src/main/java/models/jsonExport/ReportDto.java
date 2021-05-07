@@ -1,14 +1,11 @@
 package models.jsonExport;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import models.enums.Status;
 import models.yamlImport.ImportProjectDto;
 
 import java.util.List;
 
 public class ReportDto {
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String error;
 
     private Long runId;
     private ImportProjectDto project;
@@ -24,14 +21,6 @@ public class ReportDto {
 
     public void setRunId(Long runId) {
         this.runId = runId;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
     }
 
     public ImportProjectDto getProject() {

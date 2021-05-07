@@ -24,8 +24,7 @@ public class CommandExecutorImpl implements CommandExecutor {
         }
 
         String description = detail.getDescription();
-        String encodedOutput = "";
-        String encodedError = "";
+        String encodedOutput, encodedError, originalOutput, originalError;
         Status status;
 
         LocalDateTime startDate = LocalDateTime.now();
@@ -39,13 +38,15 @@ public class CommandExecutorImpl implements CommandExecutor {
 
         int exitValue = process.waitFor();
 
+        originalOutput = this.getCommandOutput(process, StreamType.INPUT);
+        encodedOutput = this.encodeToBase64(originalOutput);
+
+        originalError = this.getCommandOutput(process, StreamType.ERROR);
+        encodedError = this.encodeToBase64(originalError);
+
         if (exitValue == 0) {
-            String originalOutput = this.getCommandOutput(process, StreamType.INPUT);
-            encodedOutput = this.encodeToBase64(originalOutput);
             status = Status.PASSED;
         } else {
-            String originalError = this.getCommandOutput(process, StreamType.ERROR);
-            encodedError = this.encodeToBase64(originalError);
             status = Status.FAILED;
         }
         LocalDateTime endDate = LocalDateTime.now();
@@ -54,7 +55,7 @@ public class CommandExecutorImpl implements CommandExecutor {
     }
 
     private String getCommandOutput(Process process, StreamType streamType) throws IOException {
-        InputStreamReader streamReader = getStreamReader(process, streamType);
+        InputStreamReader streamReader = this.getStreamReader(process, streamType);
         BufferedReader reader = new BufferedReader(streamReader);
 
         StringBuilder builder = new StringBuilder();

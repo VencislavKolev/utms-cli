@@ -1,0 +1,14 @@
+project:
+  name: My Software Project
+  description: The description of the project
+suites:
+  - UITests:
+      - Test1:
+          enabled: false
+          command: echo Test 1
+          description: All statuses should be SKIPPED
+  - CI/CD Tests:
+      - Test5:
+          enabled: true
+          command: echo Test 3
+          description: Hello world

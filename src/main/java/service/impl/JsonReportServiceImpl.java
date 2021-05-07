@@ -12,15 +12,18 @@ import models.yamlImport.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static common.GlobalConstants.*;
 
 public class JsonReportServiceImpl implements JsonReportService {
+
+    private final static Set<String> validCommands = Set.of(
+            "--config", "--run-id",
+            "--suite-name", "--test-name"
+    );
+
     private final YamlUtil yamlUtil;
     private final CommandExecutor commandExecutor;
 
@@ -34,30 +37,106 @@ public class JsonReportServiceImpl implements JsonReportService {
     @Override
     public Object processInput(String... args) throws IOException {
         //--------------------------------TESTS--------------------------------------
+        Map<String, String> cmdMap = this.getCommandsMap(args);
+
+        //   String cmdValue = this.getValue(args[0]);
 
         //---------------------------------CHECK RUN ID-------------------------------------
         //var filePath = DIR_PREFIX + args[0];
-        var inputRunId = args[1];
-        boolean isNumber = this.isValidNumber(inputRunId);
-        if (!isNumber) {
-            return new ErrorDto(INVALD_RUN_ID);
+        var runCmd = "--run-id";
+        String inputRunId = null;
+        if (cmdMap.containsKey(runCmd)) {
+            inputRunId = cmdMap.get(runCmd);
+            //  var inputRunId = args[1];
+            boolean isNumber = this.isValidNumber(inputRunId);
+            if (!isNumber) {
+                return new ErrorDto(INVALD_RUN_ID);
+            }
         }
         //----------------------------------CHECK IF FILE EXISTS------------------------------------
+        var configCmd = "--config";
+        var file = DEFAULT_CONFIG_FILE;
 
-        if (getInputStream(args[0]) == null) {
+        if (cmdMap.containsKey(configCmd)) {
+            file = cmdMap.get(configCmd);
+        }
+
+        if (getInputStream(file) == null) {
             return new ErrorDto(NOT_FOUND_CONFIG);
         }
-//      //-----------------------------------CHECK IF FILE IS VALID-----------------------------------
-        if (!this.yamlUtil.checkYamlCompatibility(getInputStream(args[0]), YamlDto.class)) {
+
+        if (!this.yamlUtil.checkYamlCompatibility(getInputStream(file), YamlDto.class)) {
             return new ErrorDto(INVALID_CONFIG_FILE);
         }
+        YamlDto yamlDto = this.yamlUtil.getYamlDtoFromYamlFile(getInputStream(file));
+
+        ReportDto reportDto = this.generateReport(yamlDto, inputRunId);
+
+        return reportDto;
+//        if (getInputStream(args[0]) == null) {
+//            return new ErrorDto(NOT_FOUND_CONFIG);
+//        }
+//      //-----------------------------------CHECK IF FILE IS VALID-----------------------------------
+//        if (!this.yamlUtil.checkYamlCompatibility(getInputStream(args[0]), YamlDto.class)) {
+//            return new ErrorDto(INVALID_CONFIG_FILE);
+//        }
         //------------------------------------PARSE FILE TO DTO----------------------------------
-        YamlDto yamlDto = this.yamlUtil.getYamlDtoFromYamlFile(getInputStream(args[0]));
+//        YamlDto yamlDto = this.yamlUtil.getYamlDtoFromYamlFile(getInputStream(args[0]));
 
         //-------------------------------------GENERATE REPORT OBJECT---------------------------------
-        Long runId = Long.parseLong(inputRunId);
-        ReportDto reportDto = this.generateReport(yamlDto, runId);
-        return reportDto;
+//        Long runId = Long.parseLong(inputRunId);
+//        ReportDto reportDto = this.generateReport(yamlDto, runId);
+//        return reportDto;
+    }
+
+//    private String getValue(String command) {
+//
+//    }
+
+    @Override
+    public ReportDto generateReport(YamlDto yamlDto, String runId) {
+        ReportDto report = new ReportDto();
+
+        if (runId != null) {
+            report.setRunId(Long.parseLong(runId));
+        }
+        report.setProject(yamlDto.getProject());
+
+        List<SuiteDto> suites = this.provideSuites(yamlDto);
+        report.setSuites(suites);
+
+        Status status = this.setReportStatus(report.getSuites());
+        report.setStatus(status);
+        return report;
+    }
+
+    private Status setReportStatus(List<SuiteDto> suites) {
+        boolean hasFailedSuite = suites
+                .stream().anyMatch(s -> s.getStatus().equals(Status.FAILED));
+        if (hasFailedSuite) {
+            return Status.FAILED;
+        }
+
+        boolean allSuitesSkipped = suites
+                .stream().allMatch(s -> s.getStatus().equals(Status.SKIPPED));
+
+        if (allSuitesSkipped) {
+            return Status.SKIPPED;
+        } else {
+            return Status.PASSED;
+        }
+    }
+
+    private Map<String, String> getCommandsMap(String[] args) {
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < args.length - 1; i += 2) {
+            String cmd = args[i];
+            String value = args[i + 1];
+            if (validCommands.contains(cmd)) {
+                map.put(cmd, value);
+            }
+        }
+        return map;
     }
 
     @Override
@@ -91,7 +170,7 @@ public class JsonReportServiceImpl implements JsonReportService {
         if (!isNumber) {
             this.printJsonString(new ErrorDto("Run Id is not valid."));
         }
-        Long runId = Long.parseLong(inputRunId);
+        // Long runId = Long.parseLong(inputRunId);
         //----------------------------------------------------------------------
 
 //        if (!this.fileUtil.checkIfExists(filePath)) {
@@ -111,30 +190,9 @@ public class JsonReportServiceImpl implements JsonReportService {
         } else {
             //----------------------------------------------------------------------
             YamlDto yamlDto = this.yamlUtil.getYamlDtoFromYamlFile(filePath);
-            ReportDto reportDto = this.generateReport(yamlDto, runId);
+            ReportDto reportDto = this.generateReport(yamlDto, inputRunId);
             this.printJsonString(reportDto);
         }
-    }
-
-    @Override
-    public ReportDto generateReport(YamlDto yamlDto, Long runId) {
-        ReportDto report = new ReportDto();
-        report.setRunId(runId);
-        report.setProject(yamlDto.getProject());
-
-        List<SuiteDto> suites = this.provideSuites(yamlDto);
-        report.setSuites(suites);
-
-        boolean hasFailed = report.getSuites()
-                .stream().anyMatch(s -> s.getStatus().equals(Status.FAILED));
-
-        if (hasFailed) {
-            report.setStatus(Status.FAILED);
-        } else {
-            report.setStatus(Status.PASSED);
-        }
-
-        return report;
     }
 
     @Override
@@ -153,7 +211,6 @@ public class JsonReportServiceImpl implements JsonReportService {
                 suiteDto.setName(key);
                 List<TestDto> tests = this.provideTests(value, suiteDto);
                 suiteDto.setTests(tests);
-
                 suites.add(suiteDto);
             });
         }
@@ -186,6 +243,12 @@ public class JsonReportServiceImpl implements JsonReportService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        boolean allSkipped = testDtos
+                .stream().allMatch(s -> s.getTestDetailDto().getStatus().equals(Status.SKIPPED));
+
+        if (allSkipped) {
+            suiteDto.setStatus(Status.SKIPPED);
         }
         return testDtos;
     }

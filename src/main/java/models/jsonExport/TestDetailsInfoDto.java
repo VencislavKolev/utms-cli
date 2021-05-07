@@ -5,10 +5,9 @@ import models.enums.Status;
 import java.time.LocalDateTime;
 
 public class TestDetailsInfoDto {
+
     private String description;
-    //  @JsonProperty(defaultValue = "")
     private String output;
-    //  @JsonProperty(defaultValue = "")
     private String error;
     private Status status;
     private LocalDateTime startDate;
