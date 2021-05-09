@@ -1,13 +1,10 @@
-service\impl\JsonReportServiceImpl.class
 util\FileUtilImpl.class
 App.class
-service\JsonReportService.class
 models\yamlImport\ImportSuiteTestDto.class
 Engine.class
 models\enums\StreamType.class
 models\yamlImport\ImportProjectDto.class
 models\yamlImport\YamlDto.class
-models\jsonExport\ErrorDto.class
 util\JacksonMapper.class
 models\enums\Status.class
 service\CommandExecutor.class

@@ -20,7 +20,9 @@ public class CommandExecutorImpl implements CommandExecutor {
     public TestDetailsInfoDto testParser(ImportTestDetailDto detail) throws InterruptedException, IOException {
 
         if (!detail.getEnabled()) {
-            return new TestDetailsInfoDto(null, null, null, Status.SKIPPED, null, null);
+            // return new TestDetailsInfoDto(null, null, null, Status.SKIPPED, null, null);
+            return this.getSkippedTest(detail);
+            // TODO getSkippedTest??
         }
 
         String description = detail.getDescription();
@@ -55,7 +57,7 @@ public class CommandExecutorImpl implements CommandExecutor {
     }
 
     @Override
-    public TestDetailsInfoDto getSkippedTest(ImportTestDetailDto detail) throws InterruptedException, IOException {
+    public TestDetailsInfoDto getSkippedTest(ImportTestDetailDto detail) {
         return new TestDetailsInfoDto(detail.getDescription(), null, null, Status.SKIPPED, null, null);
     }
 

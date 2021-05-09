@@ -10,6 +10,11 @@ public class TestDto {
     public TestDto() {
     }
 
+    public TestDto(String name, TestDetailsInfoDto testDetailDto) {
+        this.name = name;
+        this.testDetailDto = testDetailDto;
+    }
+
     public String getName() {
         return name;
     }

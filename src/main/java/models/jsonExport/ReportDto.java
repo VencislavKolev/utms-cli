@@ -16,6 +16,13 @@ public class ReportDto extends BaseDto {
     public ReportDto() {
     }
 
+    public ReportDto(Long runId, ImportProjectDto project, Status status, List<SuiteDto> suites) {
+        this.runId = runId;
+        this.project = project;
+        this.status = status;
+        this.suites = suites;
+    }
+
     public ReportDto(String error) {
         super(error);
     }

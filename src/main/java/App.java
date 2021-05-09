@@ -1,7 +1,5 @@
-import service.CommandExecutor;
-import service.JsonReportService;
-import service.impl.CommandExecutorImpl;
-import service.impl.JsonReportServiceImpl;
+import service.*;
+import service.impl.*;
 import util.YamlUtil;
 import util.YamlUtilImpl;
 
@@ -10,7 +8,11 @@ public class App {
         YamlUtil yamlUtil = new YamlUtilImpl();
         CommandExecutor commandExecutor = new CommandExecutorImpl();
 
-        JsonReportService jsonReportService = new JsonReportServiceImpl(yamlUtil, commandExecutor);
+        TestGenerator testGenerator = new TestGeneratorImpl(commandExecutor);
+        SuiteGenerator suiteGenerator = new SuiteGeneratorImpl(testGenerator);
+        ReportGenerator reportGenerator = new ReportGeneratorImpl(suiteGenerator);
+
+        JsonService jsonReportService = new JsonServiceImpl(yamlUtil, reportGenerator);
 
         Engine engine = new Engine(jsonReportService);
         engine.run(args);

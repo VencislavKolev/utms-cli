@@ -13,6 +13,13 @@ public class SuiteDto {
         this.setStatus(Status.PASSED);
     }
 
+    public SuiteDto(String name, Status status, List<TestDto> tests) {
+        this();
+        this.name = name;
+        this.status = status;
+        this.tests = tests;
+    }
+
     public String getName() {
         return name;
     }
