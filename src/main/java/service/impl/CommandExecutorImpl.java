@@ -31,8 +31,10 @@ public class CommandExecutorImpl implements CommandExecutor {
 
         LocalDateTime startDate = LocalDateTime.now();
         Runtime run = Runtime.getRuntime();
-        //TODO check if PREFIX is required
-        Process process = run.exec(PREFIX + detail.getCommand());
+        //Windows
+        //Process process = run.exec(PREFIX + detail.getCommand());
+        //Linux
+        Process process = run.exec(detail.getCommand());
 
 //        String commandArray[] = {"cmd", "/c", "dir", "C:\\Program Files"};
 //        String command = "ping www.codejava.net";
