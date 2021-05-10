@@ -1,11 +1,25 @@
 pipeline {
     agent any
 
-   stages {
-		stage ('Build') {
+    stages {
+        stage ('Clone source code') {
             steps {
-				sh 'mvn -Dmaven.test.failure.ignore=true install'
+                git 'https://gitlab-talentboost.vmware.com/venci362/utms-cli.git'
             }
-		}
-	}
+        }
+
+        stage ('Build') {
+            steps {
+                script {
+                    sh 'mvn clean install'
+                }
+            }
+        }
+
+        stage ('Archive') {
+            steps {
+                archiveArtifacts 'target/**/*.jar'
+            }
+        }
+    }
 }
