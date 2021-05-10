@@ -16,10 +16,10 @@ pipeline {
 				sh 'mvn -B -DskipTests clean package' 
             }
 		}
-		 post {
+    }
+	 post {
         always {
-            archiveArtifacts artifacts: 'target/*.jar'
+            archiveArtifacts artifacts: '**/target/*.jar'
 			}
 		}
-    }
 }
