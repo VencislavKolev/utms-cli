@@ -13,7 +13,7 @@ pipeline {
         }
 		stage ('Build') {
             steps {
-				sh 'mvn -B -DskipTests clean package' 
+				sh 'mvn -Dmaven.test.failure.ignore=true install'
             }
 		}
     }

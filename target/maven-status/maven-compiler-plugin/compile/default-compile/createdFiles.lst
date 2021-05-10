@@ -1,5 +1,11 @@
+service\ReportGenerator.class
+service\JsonService.class
 util\FileUtilImpl.class
+service\SuiteGenerator.class
 App.class
+models\jsonExport\BaseDto.class
+service\impl\SuiteGeneratorImpl.class
+service\impl\JsonServiceImpl.class
 models\yamlImport\ImportSuiteTestDto.class
 Engine.class
 models\enums\StreamType.class
@@ -11,11 +17,14 @@ service\CommandExecutor.class
 util\YamlUtil.class
 models\jsonExport\SuiteDto.class
 models\jsonExport\TestDto.class
+service\impl\TestGeneratorImpl.class
 models\jsonExport\TestDetailsInfoDto.class
 service\impl\CommandExecutorImpl.class
+service\TestGenerator.class
 models\jsonExport\ReportDto.class
 models\yamlImport\ImportTestDetailDto.class
 util\YamlUtilImpl.class
 models\yamlImport\ImportSuiteDto.class
+service\impl\ReportGeneratorImpl.class
 common\GlobalConstants.class
 util\FileUtil.class
