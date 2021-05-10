@@ -18,7 +18,8 @@ pipeline {
         }
          stage ('Archive') {
             steps {
-                archiveArtifacts 'target/**/*.jar', onlyIfSuccessful: true
+                archiveArtifacts artifacts: 'target/**/*.jar',
+                   onlyIfSuccessful: true
             }
         }
     }
