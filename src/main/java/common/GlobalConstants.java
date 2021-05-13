@@ -15,4 +15,13 @@ public class GlobalConstants {
     public static final String TEST_CMD = "--test-name";
     public static final String RUN_CMD = "--run-id";
     public static final String CONFIG_CMD = "--config";
+    public static final String SERVER_CMD = "--server";
+    public static final String DEBUG_CMD = "--debug";
+
+    public static final String SUITE_CMD_SHORT = "-sn";
+    public static final String TEST_CMD_SHORT = "-tn";
+    public static final String RUN_CMD_SHORT = "-r";
+    public static final String CONFIG_CMD_SHORT = "-c";
+    public static final String SERVER_CMD_SHORT = "-s";
+    public static final String DEBUG_CMD_SHORT = "-d";
 }

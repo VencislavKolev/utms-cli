@@ -1,10 +1,16 @@
 import models.entity.TestRun;
+import models.enums.MapType;
 import models.jsonExport.ReportDto;
+import service.impl.CommandMapImpl;
 import service.impl.HttpClientService;
 import service.JsonService;
 import service.impl.RunBodyGenerator;
 
 import java.io.IOException;
+import java.util.Map;
+
+import static common.GlobalConstants.DEBUG_CMD;
+import static common.GlobalConstants.SERVER_CMD;
 
 public class Engine {
 
@@ -26,8 +32,9 @@ public class Engine {
 
     public void run(String[] args) {
 
+        Map<String, String> cmdMap = CommandMapImpl.getCommandsMap(args, MapType.RUN);
         try {
-            ReportDto object = this.jsonService.processInput(args);
+            ReportDto object = this.jsonService.processInput(cmdMap);
 
             //-------------------
             //Object object = this.jsonService.processInput("--config", "testing.yaml", "--run-id", "1");
@@ -45,17 +52,27 @@ public class Engine {
             //Object object = this.jsonService.processInput("-c", "testing.yaml", "-sn", "UITests", "-tn", "Test8");
             //Object object = this.jsonService.processInput("-c", "testing.yaml", "-sn", "UITests");
 
-            this.jsonService.printJsonString(object);
+            //this.jsonService.printJsonString(object);
 
-            if (object.getError() == null) {
-                String projectJson = this.jsonService.getJsonString(object.getProject());
-                String id = this.httpClientService.sendRequest(projectJson);
+            var envMap = CommandMapImpl.getCommandsMap(args, MapType.ENVIRONMENT);
+            if (envMap.containsKey(SERVER_CMD)) {
+                String server = envMap.get(SERVER_CMD);
 
-                TestRun run = this.generator.getRunFromResult(object);
-                String runJson = this.jsonService.getJsonString(run);
-                this.jsonService.printJsonString(run);
+                if (object.getError() == null) {
+                    if (envMap.containsKey(DEBUG_CMD) && envMap.get(DEBUG_CMD).equals("true")) {
+                        this.jsonService.printJsonString(object);
+                    } else {
+                        String projectJson = this.jsonService.getJsonString(object.getProject());
+                        String id = this.httpClientService.sendRequest(projectJson, server);
 
-                this.httpClientService.sendRunToProject(runJson, id);
+                        TestRun run = this.generator.getRunFromResult(object);
+                        String runJson = this.jsonService.getJsonString(run);
+                        //this.jsonService.printJsonString(run);
+                        this.httpClientService.sendRunToProject(runJson, server, id);
+                    }
+                } else {
+                    this.jsonService.printJsonString(object);
+                }
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

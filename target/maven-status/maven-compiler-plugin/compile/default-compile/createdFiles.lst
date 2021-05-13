@@ -1,8 +1,10 @@
+models\entity\TestCase.class
 service\ReportGenerator.class
 service\JsonService.class
 util\FileUtilImpl.class
 service\SuiteGenerator.class
 App.class
+models\entity\Project.class
 models\jsonExport\BaseDto.class
 service\impl\SuiteGeneratorImpl.class
 service\impl\JsonServiceImpl.class
@@ -13,6 +15,7 @@ models\yamlImport\ImportProjectDto.class
 models\yamlImport\YamlDto.class
 util\JacksonMapper.class
 models\enums\Status.class
+service\impl\CommandMapImpl.class
 service\CommandExecutor.class
 util\YamlUtil.class
 models\jsonExport\SuiteDto.class
@@ -21,10 +24,15 @@ service\impl\TestGeneratorImpl.class
 models\jsonExport\TestDetailsInfoDto.class
 service\impl\CommandExecutorImpl.class
 service\TestGenerator.class
+service\impl\HttpClientService.class
+models\entity\TestSuite.class
 models\jsonExport\ReportDto.class
+models\entity\TestRun.class
+models\enums\MapType.class
 models\yamlImport\ImportTestDetailDto.class
 util\YamlUtilImpl.class
 models\yamlImport\ImportSuiteDto.class
 service\impl\ReportGeneratorImpl.class
+service\impl\RunBodyGenerator.class
 common\GlobalConstants.class
 util\FileUtil.class

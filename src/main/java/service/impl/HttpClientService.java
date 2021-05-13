@@ -7,15 +7,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class HttpClientService {
-//    private static final String PROJECT_ENDPOINT = "http://localhost:8081/api/projects";
-//    private static final String TESTRUN_ENDPOINT = "http://localhost:8081/api/projects/%s/runs";
-    private static final String PROJECT_ENDPOINT = "http://192.168.56.1:8081/api/projects";
-    private static final String TESTRUN_ENDPOINT = "http://192.168.56.1:8081/api/projects/%s/runs";
+    private static final String PROJECT_ENDPOINT = "/projects";
+    private static final String TESTRUN_ENDPOINT = "%s/projects/%s/runs";
+    //private static final String PROJECT_ENDPOINT = "http://192.168.56.1:8081/api/projects";
+    //private static final String TESTRUN_ENDPOINT = "http://192.168.56.1:8081/api/projects/%s/runs";
 
-    public String sendRequest(String json) throws IOException, InterruptedException {
+    public String sendRequest(String json, String server) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(PROJECT_ENDPOINT))
+                .uri(URI.create(server + PROJECT_ENDPOINT))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
@@ -28,10 +28,10 @@ public class HttpClientService {
         return response.body();
     }
 
-    public void sendRunToProject(String json, String id) throws IOException, InterruptedException {
+    public void sendRunToProject(String json, String server, String id) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(String.format(TESTRUN_ENDPOINT, id)))
+                .uri(URI.create(String.format(TESTRUN_ENDPOINT, server, id)))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();

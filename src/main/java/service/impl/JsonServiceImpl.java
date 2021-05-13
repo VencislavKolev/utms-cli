@@ -11,21 +11,12 @@ import util.YamlUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import static common.GlobalConstants.*;
 import static common.GlobalConstants.INVALID_CONFIG_FILE;
 
 public class JsonServiceImpl implements JsonService {
-    private final static Set<String> VALID_COMMANDS = Set.of(
-            "--config", "--run-id",
-            "-c", "-r",
-            "--suite-name", "--test-name",
-            "-sn", "-tn"
-    );
-
     private final YamlUtil yamlUtil;
     private final ReportGenerator reportGenerator;
 
@@ -34,11 +25,10 @@ public class JsonServiceImpl implements JsonService {
         this.reportGenerator = reportGenerator;
     }
 
-
     @Override
-    public ReportDto processInput(String... args) throws IOException {
+    public ReportDto processInput(Map<String, String> cmdMap) throws IOException {
         //--------------------------------TESTS--------------------------------------
-        Map<String, String> cmdMap = this.getCommandsMap(args);
+        // Map<String, String> cmdMap = this.getCommandsMap(args);
 
         //---------------------------------CHECK RUN ID-------------------------------------
         //var filePath = DIR_PREFIX + args[0];
@@ -81,39 +71,6 @@ public class JsonServiceImpl implements JsonService {
 
     public String getJsonString(Object obj) throws JsonProcessingException {
         return JacksonMapper.getMapper().writeValueAsString(obj);
-    }
-
-    private Map<String, String> getCommandsMap(String[] args) {
-        Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < args.length - 1; i += 2) {
-            String cmd = args[i];
-            String value = args[i + 1];
-            String key = null;
-            if (VALID_COMMANDS.contains(cmd)) {
-                switch (cmd) {
-                    case "-c":
-                        key = CONFIG_CMD;
-                        map.put(key, value);
-                        break;
-                    case "-r":
-                        key = RUN_CMD;
-                        map.put(key, value);
-                        break;
-                    case "-sn":
-                        key = SUITE_CMD;
-                        map.put(key, value);
-                        break;
-                    case "-tn":
-                        key = TEST_CMD;
-                        map.put(key, value);
-                        break;
-                    default:
-                        map.put(cmd, value);
-                }
-                //map.put(key, value);
-            }
-        }
-        return map;
     }
 
     private InputStream getInputStream(String arg) {
