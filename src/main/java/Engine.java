@@ -1,4 +1,8 @@
+import models.entity.TestRun;
+import models.jsonExport.ReportDto;
+import service.impl.HttpClientService;
 import service.JsonService;
+import service.impl.RunBodyGenerator;
 
 import java.io.IOException;
 
@@ -10,35 +14,50 @@ public class Engine {
     private static final String INVALID_YAML = "./not-valid-testing.yaml";
     private static final String NONEXISTING_YAML = "varvarvar";
 
-    private final JsonService jsonReportService;
+    private final JsonService jsonService;
+    private final HttpClientService httpClientService;
+    private final RunBodyGenerator generator;
 
-    public Engine(JsonService jsonReportService) {
-        this.jsonReportService = jsonReportService;
+    public Engine(JsonService jsonService, HttpClientService httpClientService, RunBodyGenerator generator) {
+        this.jsonService = jsonService;
+        this.httpClientService = httpClientService;
+        this.generator = generator;
     }
 
     public void run(String[] args) {
 
         try {
-            Object object = this.jsonReportService.processInput(args);
+            ReportDto object = this.jsonService.processInput(args);
 
             //-------------------
-            //Object object = this.jsonReportService.processInput("--config", "testing.yaml", "--run-id", "1");
-            //Object object = this.jsonReportService.processInput("--config", "skipping.yaml");
+            //Object object = this.jsonService.processInput("--config", "testing.yaml", "--run-id", "1");
+            //Object object = this.jsonService.processInput("--config", "skipping.yaml");
 
             //--------------BONUS ARGUMENTS---------
-            //Object object = this.jsonReportService.processInput("--config", "testing.yaml", "--suite-name", "UITests");
+            //Object object = this.jsonService.processInput("--config", "testing.yaml", "--suite-name", "UITests");
 
-            //Object object = this.jsonReportService.processInput("--config", "testing.yaml", "--suite-name", "UITests", "--test-name", "Test4");
-            //Object object = this.jsonReportService.processInput("--config", "testing.yaml", "--suite-name", "UITests", "--test-name", "Test1");
-            //Object object = this.jsonReportService.processInput("--config", "testing.yaml", "--test-name", "Test4");
+            //Object object = this.jsonService.processInput("--config", "testing.yaml", "--suite-name", "UITests", "--test-name", "Test4");
+            //Object object = this.jsonService.processInput("--config", "testing.yaml", "--suite-name", "UITests", "--test-name", "Test1");
+            //Object object = this.jsonService.processInput("--config", "testing.yaml", "--test-name", "Test4");
 
             //-------------------SHORT COMMANDS-------------
-            //Object object = this.jsonReportService.processInput("-c", "testing.yaml", "-sn", "UITests", "-tn", "Test4");
-            //Object object = this.jsonReportService.processInput("-c", "testing.yaml", "-sn", "UITests", "-tn", "Test8");
-            //Object object = this.jsonReportService.processInput("-c", "testing.yaml", "-sn", "UITests");
+            //Object object = this.jsonService.processInput("-c", "testing.yaml", "-sn", "UITests", "-tn", "Test4");
+            //Object object = this.jsonService.processInput("-c", "testing.yaml", "-sn", "UITests", "-tn", "Test8");
+            //Object object = this.jsonService.processInput("-c", "testing.yaml", "-sn", "UITests");
 
-            this.jsonReportService.printJsonString(object);
-        } catch (IOException e) {
+            this.jsonService.printJsonString(object);
+
+            if (object.getError() == null) {
+                String projectJson = this.jsonService.getJsonString(object.getProject());
+                String id = this.httpClientService.sendRequest(projectJson);
+
+                TestRun run = this.generator.getRunFromResult(object);
+                String runJson = this.jsonService.getJsonString(run);
+                this.jsonService.printJsonString(run);
+
+                this.httpClientService.sendRunToProject(runJson, id);
+            }
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 

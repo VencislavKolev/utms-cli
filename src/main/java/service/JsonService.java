@@ -1,11 +1,14 @@
 package service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import models.jsonExport.ReportDto;
 
 import java.io.IOException;
 
 public interface JsonService {
-    Object processInput(String... args) throws IOException;
+    ReportDto processInput(String... args) throws IOException;
 
     void printJsonString(Object obj) throws JsonProcessingException;
+
+    String getJsonString(Object obj) throws JsonProcessingException;
 }

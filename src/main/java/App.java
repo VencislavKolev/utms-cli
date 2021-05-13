@@ -14,7 +14,10 @@ public class App {
 
         JsonService jsonReportService = new JsonServiceImpl(yamlUtil, reportGenerator);
 
-        Engine engine = new Engine(jsonReportService);
+        HttpClientService httpClientService = new HttpClientService();
+        RunBodyGenerator generator = new RunBodyGenerator();
+
+        Engine engine = new Engine(jsonReportService,httpClientService, generator);
         engine.run(args);
     }
 }

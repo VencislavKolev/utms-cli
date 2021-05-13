@@ -36,7 +36,7 @@ public class JsonServiceImpl implements JsonService {
 
 
     @Override
-    public Object processInput(String... args) throws IOException {
+    public ReportDto processInput(String... args) throws IOException {
         //--------------------------------TESTS--------------------------------------
         Map<String, String> cmdMap = this.getCommandsMap(args);
 
@@ -77,6 +77,10 @@ public class JsonServiceImpl implements JsonService {
         String outputJson = mapper.writeValueAsString(obj);
 
         System.out.println(outputJson);
+    }
+
+    public String getJsonString(Object obj) throws JsonProcessingException {
+        return JacksonMapper.getMapper().writeValueAsString(obj);
     }
 
     private Map<String, String> getCommandsMap(String[] args) {
