@@ -14,37 +14,22 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 
 public class CommandExecutorImpl implements CommandExecutor {
-    private static final String PREFIX = "cmd.exe /c ";
+    private static final String WIN_PREFIX = "cmd.exe /c ";
 
     @Override
     public TestDetailsInfoDto testParser(ImportTestDetailDto detail) throws InterruptedException, IOException {
 
         if (!detail.getEnabled()) {
-            // return new TestDetailsInfoDto(null, null, null, Status.SKIPPED, null, null);
             return this.getSkippedTest(detail);
-            // TODO getSkippedTest??
         }
 
         String description = detail.getDescription();
         String encodedOutput, encodedError, originalOutput, originalError;
-        Status status;
 
         LocalDateTime startDate = LocalDateTime.now();
+
         Runtime run = Runtime.getRuntime();
-        Process process;
-
-        String operSys = System.getProperty("os.name").toLowerCase();
-        if (operSys.contains("win")) {
-            //Windows
-            process = run.exec(PREFIX + detail.getCommand());
-        } else {
-            //Linux
-            process = run.exec(detail.getCommand());
-        }
-
-//        String commandArray[] = {"cmd", "/c", "dir", "C:\\Program Files"};
-//        String command = "ping www.codejava.net";
-//        Process process = run.exec(command);
+        Process process = this.getProcess(detail, run);
 
         int exitValue = process.waitFor();
 
@@ -54,14 +39,33 @@ public class CommandExecutorImpl implements CommandExecutor {
         originalError = this.getCommandOutput(process, StreamType.ERROR);
         encodedError = this.encodeToBase64(originalError);
 
+        Status status = this.getStatus(exitValue);
+        LocalDateTime endDate = LocalDateTime.now();
+
+        return new TestDetailsInfoDto(description, encodedOutput, encodedError, status, startDate, endDate);
+    }
+
+    private Status getStatus(int exitValue) {
+        Status status;
         if (exitValue == 0) {
             status = Status.PASSED;
         } else {
             status = Status.FAILED;
         }
-        LocalDateTime endDate = LocalDateTime.now();
+        return status;
+    }
 
-        return new TestDetailsInfoDto(description, encodedOutput, encodedError, status, startDate, endDate);
+    private Process getProcess(ImportTestDetailDto detail, Runtime run) throws IOException {
+        Process process;
+
+        String operSys = System.getProperty("os.name").toLowerCase();
+        if (operSys.contains("win")) {
+            //Windows
+            process = run.exec(WIN_PREFIX + detail.getCommand());
+        } else {
+            process = run.exec(detail.getCommand());
+        }
+        return process;
     }
 
     @Override

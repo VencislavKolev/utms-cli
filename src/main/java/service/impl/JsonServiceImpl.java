@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.util.Map;
 
 import static common.GlobalConstants.*;
-import static common.GlobalConstants.INVALID_CONFIG_FILE;
 
 public class JsonServiceImpl implements JsonService {
     private final YamlUtil yamlUtil;
@@ -27,11 +26,6 @@ public class JsonServiceImpl implements JsonService {
 
     @Override
     public ReportDto processInput(Map<String, String> cmdMap) throws IOException {
-        //--------------------------------TESTS--------------------------------------
-        // Map<String, String> cmdMap = this.getCommandsMap(args);
-
-        //---------------------------------CHECK RUN ID-------------------------------------
-        //var filePath = DIR_PREFIX + args[0];
 
         String inputRunId = null;
         if (cmdMap.containsKey(RUN_CMD)) {

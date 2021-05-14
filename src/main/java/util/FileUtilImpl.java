@@ -3,6 +3,8 @@ package util;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import static common.GlobalConstants.NOT_FOUND_FILE;
+
 public class FileUtilImpl implements FileUtil {
 
     public FileUtilImpl() {
@@ -20,7 +22,7 @@ public class FileUtilImpl implements FileUtil {
         boolean exists = this.checkIfExists(filepath);
 
         if (!exists) {
-            throw new FileNotFoundException("File not found");
+            throw new FileNotFoundException(NOT_FOUND_FILE);
         }
         return new File(filepath);
     }

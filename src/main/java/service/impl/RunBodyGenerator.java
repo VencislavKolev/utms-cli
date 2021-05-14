@@ -21,12 +21,14 @@ public class RunBodyGenerator {
     public TestRun getRunFromResult(ReportDto reportDto) {
         Set<TestSuite> testSuites = this.getTestSuites(reportDto.getSuites());
         Status status = reportDto.getStatus();
+
         return new TestRun(status, testSuites);
     }
 
     public Set<TestSuite> getTestSuites(List<SuiteDto> suiteDtos) {
         Set<TestSuite> testSuites = new HashSet<>();
         for (SuiteDto suite : suiteDtos) {
+
             String suiteName = suite.getName();
             Status status = suite.getStatus();
             Set<TestCase> testCases = this.getTestCases(suite);
@@ -40,6 +42,7 @@ public class RunBodyGenerator {
     public Set<TestCase> getTestCases(SuiteDto suiteDto) {
         Set<TestCase> testCases = new HashSet<>();
         for (TestDto test : suiteDto.getTests()) {
+
             String name = test.getName();
             String description = test.getTestDetailDto().getDescription();
             Status status = test.getTestDetailDto().getStatus();

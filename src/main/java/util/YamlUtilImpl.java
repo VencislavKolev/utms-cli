@@ -46,9 +46,7 @@ public class YamlUtilImpl implements YamlUtil {
 
     @Override
     public YamlDto getYamlDtoFromYamlFile(File file) throws IOException {
-        // ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
         return new ObjectMapper(new YAMLFactory()).readValue(file, YamlDto.class);
-        // return objectMapper.readValue(file, YamlDto.class);
     }
 
     @Override
@@ -63,11 +61,8 @@ public class YamlUtilImpl implements YamlUtil {
 
     @Override
     public boolean checkYamlCompatibility(File file, Class<?> aClass) throws IOException {
-        //ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-
         try {
             new ObjectMapper(new YAMLFactory()).readValue(file, YamlDto.class);
-            //mapper.readValue(file, aClass);
             return true;
         } catch (JsonParseException | JsonMappingException e) {
             return false;

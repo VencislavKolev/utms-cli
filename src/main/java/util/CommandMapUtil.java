@@ -1,4 +1,4 @@
-package service.impl;
+package util;
 
 
 import models.enums.MapType;
@@ -8,9 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static common.GlobalConstants.*;
-import static common.GlobalConstants.TEST_CMD;
 
-public class CommandMapImpl /*implements CommandMap */ {
+public class CommandMapUtil /*implements CommandMap */ {
     private final static Set<String> VALID_COMMANDS = Set.of(
             CONFIG_CMD, RUN_CMD,
             SUITE_CMD, TEST_CMD,
@@ -23,7 +22,6 @@ public class CommandMapImpl /*implements CommandMap */ {
             SERVER_CMD_SHORT, DEBUG_CMD_SHORT
     );
 
-    // @Override
     public static Map<String, String> getCommandsMap(String[] args, MapType type) {
         Map<String, String> map = new HashMap<>();
         for (int i = 0; i < args.length - 1; i += 2) {
@@ -67,30 +65,6 @@ public class CommandMapImpl /*implements CommandMap */ {
                         default:
                             map.put(cmd, value);
                     }
-                }
-            }
-        }
-        return map;
-    }
-
-    public static Map<String, String> getEnvironmentMap(String[] args) {
-        Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < args.length - 1; i += 2) {
-            String cmd = args[i];
-            String value = args[i + 1];
-            String key;
-            if (ENVIRONMENT_COMMANDS.contains(cmd)) {
-                switch (cmd) {
-                    case SERVER_CMD_SHORT:
-                        key = SERVER_CMD;
-                        map.put(key, value);
-                        break;
-                    case DEBUG_CMD_SHORT:
-                        key = DEBUG_CMD;
-                        map.put(key, value);
-                        break;
-                    default:
-                        map.put(cmd, value);
                 }
             }
         }

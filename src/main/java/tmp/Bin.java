@@ -89,3 +89,9 @@
 ////            return new ErrorDto("Configuration file not found.");
 ////        }
 //
+//
+//private static final String YAML_FILEPATH = "./testing.yaml";
+//private static final String TESTING2 = "/testing2.yaml";
+//
+//private static final String INVALID_YAML = "./not-valid-testing.yaml";
+//private static final String NONEXISTING_YAML = "varvarvar";

@@ -28,21 +28,18 @@ public class TestGeneratorImpl implements TestGenerator {
     public List<TestDto> generateTests(ImportSuiteTestDto[] suiteTests, String currSuiteName, Map<String, String> commands) throws IOException, InterruptedException {
         List<TestDto> tests = new ArrayList<>();
 
-        //normal run(ALL suites and tests)
-        //given suite name
-        //given test name
-        //given suite and test
         Map<String, ImportTestDetailDto> stringTestDetailMap = getMapFromSuiteTests(suiteTests);
         for (Map.Entry<String, ImportTestDetailDto> map : stringTestDetailMap.entrySet()) {
 
             TestDetailsInfoDto currentTest = new TestDetailsInfoDto();
             if (commands.isEmpty()) {
-                //no commands -> normal run(everything)
+                //run everything
                 currentTest = this.commandExecutor.testParser(map.getValue());
             } else {
                 String suiteNameToRun;
                 String testNameToRun;
                 if (commands.size() == 1) {
+
                     if (commands.containsKey(SUITE_CMD)) {
                         //RUN SUITE
                         suiteNameToRun = commands.get(SUITE_CMD);
