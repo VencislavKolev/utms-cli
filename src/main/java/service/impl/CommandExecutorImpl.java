@@ -60,7 +60,6 @@ public class CommandExecutorImpl implements CommandExecutor {
 
         String operSys = System.getProperty("os.name").toLowerCase();
         if (operSys.contains("win")) {
-            //Windows
             process = run.exec(WIN_PREFIX + detail.getCommand());
         } else {
             process = run.exec(detail.getCommand());

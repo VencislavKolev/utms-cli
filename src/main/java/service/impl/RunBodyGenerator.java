@@ -46,8 +46,10 @@ public class RunBodyGenerator {
             String name = test.getName();
             String description = test.getTestDetailDto().getDescription();
             Status status = test.getTestDetailDto().getStatus();
+
             String output = test.getTestDetailDto().getOutput();
             String error = test.getTestDetailDto().getError();
+
             LocalDateTime startDate = test.getTestDetailDto().getStartDate();
             LocalDateTime endDate = test.getTestDetailDto().getEndDate();
 

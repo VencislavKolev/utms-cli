@@ -14,12 +14,12 @@ suites:
       - Test3:
           enabled: true
           command: echo Test 3
-          description: Hello world
+          description: Hello Angular
       - Test4:
           enabled: false
           command: echo
   - CI/CD Tests:
       - Test5:
           enabled: true
-          command: echo Test 3
-          description: Hello world
+          command: echo Test 5
+          description: Hello CI/CD

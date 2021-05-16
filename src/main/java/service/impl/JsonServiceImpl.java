@@ -27,14 +27,16 @@ public class JsonServiceImpl implements JsonService {
     @Override
     public ReportDto processInput(Map<String, String> cmdMap) throws IOException {
 
-        String inputRunId = null;
-        if (cmdMap.containsKey(RUN_CMD)) {
-            inputRunId = cmdMap.remove(RUN_CMD);
-            boolean isNumber = this.isValidNumber(inputRunId);
-            if (!isNumber) {
-                return new ReportDto(INVALID_RUN_ID);
-            }
-        }
+        //----------------------------------RUN_ID-REMOVED------------------------------------
+//        String inputRunId = null;
+//        if (cmdMap.containsKey(RUN_CMD)) {
+//            inputRunId = cmdMap.remove(RUN_CMD);
+//            boolean isNumber = this.isValidNumber(inputRunId);
+//            if (!isNumber) {
+//                return new ReportDto(INVALID_RUN_ID);
+//            }
+//        }
+
         //----------------------------------CHECK IF FILE EXISTS------------------------------------
         String file = DEFAULT_FILE;
 
@@ -51,7 +53,7 @@ public class JsonServiceImpl implements JsonService {
         }
         YamlDto yamlDto = this.yamlUtil.getYamlDtoFromYamlFile(getInputStream(file));
 
-        ReportDto reportDto = this.reportGenerator.getReport(yamlDto, inputRunId, cmdMap);
+        ReportDto reportDto = this.reportGenerator.getReport(yamlDto, cmdMap);
         return reportDto;
     }
 
@@ -59,7 +61,6 @@ public class JsonServiceImpl implements JsonService {
     public void printJsonString(Object obj) throws JsonProcessingException {
         ObjectMapper mapper = JacksonMapper.getMapper();
         String outputJson = mapper.writeValueAsString(obj);
-
         System.out.println(outputJson);
     }
 

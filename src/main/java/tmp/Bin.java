@@ -1,10 +1,3 @@
-//package tmp;
-//
-//import com.amihaiemil.eoyaml.YamlMapping;
-//import de.bertilmuth.javadataclass.generate.JavaDataClassGenerator;
-//import de.bertilmuth.javadataclass.model.ClassSpecification;
-//import de.bertilmuth.javadataclass.read.YamlClassSpecificationReader;
-//
 //import java.io.File;
 //import java.io.IOException;
 //import java.util.List;
@@ -25,12 +18,6 @@
 //        System.out.println("Successfully generated files to: " + outputDirectory.getAbsolutePath());
 //    }
 //
-//    private void option3() throws IOException {
-//        YamlMapping team = com.amihaiemil.eoyaml.Yaml.createYamlInput(
-//                new File(YAML_FILEPATH))
-//                .readYamlMapping();
-//        System.out.println();
-//    }
 //
 //private void castYamlSnakeYaml() {
 //        Yaml yaml = new Yaml(new Constructor(YamlDto.class));
@@ -90,8 +77,19 @@
 ////        }
 //
 //
-//private static final String YAML_FILEPATH = "./testing.yaml";
-//private static final String TESTING2 = "/testing2.yaml";
-//
-//private static final String INVALID_YAML = "./not-valid-testing.yaml";
-//private static final String NONEXISTING_YAML = "varvarvar";
+
+//-------------------
+//ReportDto result = this.jsonService.processInput("--config", "testing.yaml", "--run-id", "1");
+//ReportDto result = this.jsonService.processInput("--config", "skipping.yaml");
+
+//--------------BONUS ARGUMENTS---------
+//ReportDto result = this.jsonService.processInput("--config", "testing.yaml", "--suite-name", "UITests");
+
+//ReportDto result = this.jsonService.processInput("--config", "testing.yaml", "--suite-name", "UITests", "--test-name", "Test4");
+//ReportDto result = this.jsonService.processInput("--config", "testing.yaml", "--suite-name", "UITests", "--test-name", "Test1");
+//ReportDto result = this.jsonService.processInput("--config", "testing.yaml", "--test-name", "Test4");
+
+//-------------------SHORT COMMANDS-------------
+//ReportDto result = this.jsonService.processInput("-c", "testing.yaml", "-sn", "UITests", "-tn", "Test4");
+//ReportDto result = this.jsonService.processInput("-c", "testing.yaml", "-sn", "UITests", "-tn", "Test8");
+//ReportDto result = this.jsonService.processInput("-c", "testing.yaml", "-sn", "UITests");

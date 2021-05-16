@@ -13,9 +13,9 @@ Engine.class
 models\enums\StreamType.class
 models\yamlImport\ImportProjectDto.class
 models\yamlImport\YamlDto.class
+util\CommandMapUtil.class
 util\JacksonMapper.class
 models\enums\Status.class
-service\impl\CommandMapImpl.class
 service\CommandExecutor.class
 util\YamlUtil.class
 models\jsonExport\SuiteDto.class

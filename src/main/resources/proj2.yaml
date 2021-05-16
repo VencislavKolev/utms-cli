@@ -1,5 +1,5 @@
 project:
-  name: utms
+  name: UTMS
   description: final task
 suites:
   - BackEndTests:

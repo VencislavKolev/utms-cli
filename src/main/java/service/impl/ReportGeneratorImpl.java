@@ -19,7 +19,7 @@ public class ReportGeneratorImpl implements ReportGenerator {
     }
 
     @Override
-    public ReportDto getReport(YamlDto yamlDto, String runId, Map<String, String> commands) {
+    public ReportDto getReport(YamlDto yamlDto, Map<String, String> commands) {
         ReportDto report = new ReportDto();
 
         if (commands.containsKey(SUITE_CMD)) {
@@ -52,9 +52,6 @@ public class ReportGeneratorImpl implements ReportGenerator {
             }
         }
 
-        if (runId != null) {
-            report.setRunId(Long.parseLong(runId));
-        }
         report.setProject(yamlDto.getProject());
 
         List<SuiteDto> suites = this.suiteGenerator.getSuites(yamlDto, commands);

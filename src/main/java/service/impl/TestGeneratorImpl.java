@@ -33,11 +33,13 @@ public class TestGeneratorImpl implements TestGenerator {
 
             TestDetailsInfoDto currentTest = new TestDetailsInfoDto();
             if (commands.isEmpty()) {
-                //run everything
+                //RUN EVERYTHING -> NO SPECIAL REQUIREMENTS
                 currentTest = this.commandExecutor.testParser(map.getValue());
+
             } else {
                 String suiteNameToRun;
                 String testNameToRun;
+
                 if (commands.size() == 1) {
 
                     if (commands.containsKey(SUITE_CMD)) {
@@ -48,6 +50,7 @@ public class TestGeneratorImpl implements TestGenerator {
                         } else {
                             currentTest = this.commandExecutor.getSkippedTest(map.getValue());
                         }
+
                     } else if (commands.containsKey(TEST_CMD)) {
                         //RUN TEST
                         testNameToRun = commands.get(TEST_CMD);
@@ -60,16 +63,19 @@ public class TestGeneratorImpl implements TestGenerator {
                             currentTest = this.commandExecutor.getSkippedTest(map.getValue());
                         }
                     }
+
                 } else {
                     suiteNameToRun = commands.get(SUITE_CMD);
                     testNameToRun = commands.get(TEST_CMD);
                     //RUN TEST IN SUITE
+
                     if (suiteNameToRun.equals(currSuiteName) && testNameToRun.equals(map.getKey())) {
                         //IF BOTH MATCH -> RUN TEST and EXPLICITLY SET ENABLED TRUE
                         map.getValue().setEnabled(true);
                         currentTest = this.commandExecutor.testParser(map.getValue());
+
                     } else {
-                        //IF dont match -> skip
+                        //IF DON'T MATCH -> GET SKIPPED TEST
                         currentTest = this.commandExecutor.getSkippedTest(map.getValue());
                     }
                 }

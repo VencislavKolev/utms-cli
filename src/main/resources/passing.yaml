@@ -6,9 +6,8 @@ suites:
       - Test1:
           enabled: false
           command: echo Test 1
-          description: All statuses should be SKIPPED
   - CI/CD Tests:
       - Test5:
           enabled: true
-          command: echo Test 3
+          command: echo Test 5
           description: Hello world

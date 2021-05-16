@@ -17,7 +17,7 @@ public class App {
         HttpClientService httpClientService = new HttpClientService();
         RunBodyGenerator generator = new RunBodyGenerator();
 
-        Engine engine = new Engine(jsonReportService,httpClientService, generator);
+        Engine engine = new Engine(jsonReportService, httpClientService, generator);
         engine.run(args);
     }
 }
