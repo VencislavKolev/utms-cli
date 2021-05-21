@@ -6,4 +6,4 @@ suites:
       - Test1:
           enabled: false
           command: echo Test 1
-          description: All statuses should be SKIPPED
+          description: Status should be SKIPPED
