@@ -1,0 +1,11 @@
+project:
+  name: My Failing Project
+  description: I fail for the demo
+suites:
+  - BackEndTests:
+      - Test1:
+          enabled: true
+          command: echo Test
+      - Test2:
+          enabled: true
+          command: (exit -1) || echo It failed.

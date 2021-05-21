@@ -7,6 +7,7 @@ App.class
 models\entity\Project.class
 models\jsonExport\BaseDto.class
 service\impl\SuiteGeneratorImpl.class
+util\Base64Util.class
 service\impl\JsonServiceImpl.class
 models\yamlImport\ImportSuiteTestDto.class
 Engine.class

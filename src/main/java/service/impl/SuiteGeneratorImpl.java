@@ -53,7 +53,6 @@ public class SuiteGeneratorImpl implements SuiteGenerator {
 
         boolean allSuitesAreSkipped = tests
                 .stream().allMatch(t -> t.getTestDetailDto().getStatus().equals(Status.SKIPPED));
-
         if (allSuitesAreSkipped) {
             return Status.SKIPPED;
         } else {

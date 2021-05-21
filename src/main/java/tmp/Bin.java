@@ -93,3 +93,49 @@
 //ReportDto result = this.jsonService.processInput("-c", "testing.yaml", "-sn", "UITests", "-tn", "Test4");
 //ReportDto result = this.jsonService.processInput("-c", "testing.yaml", "-sn", "UITests", "-tn", "Test8");
 //ReportDto result = this.jsonService.processInput("-c", "testing.yaml", "-sn", "UITests");
+
+//----------------------------------RUN_ID-REMOVED------------------------------------
+//        String inputRunId = null;
+//        if (cmdMap.containsKey(RUN_CMD)) {
+//            inputRunId = cmdMap.remove(RUN_CMD);
+//            boolean isNumber = this.isValidNumber(inputRunId);
+//            if (!isNumber) {
+//                return new ReportDto(INVALID_RUN_ID);
+//            }
+//        }
+
+//private boolean isValidNumber(String str) {
+//        // null pointer
+//        if (str == null) {
+//        return false;
+//        }
+//        int len = str.length();
+//        // empty string
+//        if (len == 0) {
+//        return false;
+//        }
+//        // one digit, cannot begin with 0
+//        if (len == 1) {
+//        char c = str.charAt(0);
+//        if ((c < '1') || (c > '9')) {
+//        return false;
+//        }
+//        }
+//
+//        for (int i = 0; i < len; i++) {
+//        char c = str.charAt(i);
+//        // check positive, negative sign
+//        if (i == 0) {
+//        // only positive sign accepted
+//        if (c == '+' || Character.isDigit(c)) {
+//        continue;
+//        }
+//        return false;
+//        }
+//        // check each character matches [0-9]
+//        if ((c < '0') || (c > '9')) {
+//        return false;
+//        }
+//        }
+//        return true;
+//        }

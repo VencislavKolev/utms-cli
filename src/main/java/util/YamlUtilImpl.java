@@ -67,7 +67,6 @@ public class YamlUtilImpl implements YamlUtil {
         } catch (JsonParseException | JsonMappingException e) {
             return false;
         }
-
     }
 
     @Override
