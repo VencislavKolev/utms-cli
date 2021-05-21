@@ -1,0 +1,16 @@
+project:
+  name: Universal Test Management System
+  description: Talent Boost Final Task
+suites:
+  - BackEndTests:
+      - Test1:
+          enabled: true
+          command: echo Hello Spring
+      - Test2:
+          enabled: true
+          command: echo Test 2
+          description: Just another test
+  - UITests:
+      - Test3:
+          enabled: false
+          command: echo Hello Angular

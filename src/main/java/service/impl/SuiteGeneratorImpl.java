@@ -26,13 +26,16 @@ public class SuiteGeneratorImpl implements SuiteGenerator {
         for (ImportSuiteDto suite : yamlDto.getSuites()) {
             suite.getMap().forEach((suiteName, suiteTests) -> {
                 List<TestDto> tests = new ArrayList<>();
+
                 try {
                     tests = this.testGenerator.generateTests(suiteTests, suiteName, commands);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
                 Status status = this.getSuiteStatus(tests);
                 SuiteDto suiteDto = new SuiteDto(suiteName, status, tests);
+
                 suites.add(suiteDto);
             });
 
@@ -48,10 +51,10 @@ public class SuiteGeneratorImpl implements SuiteGenerator {
             return Status.FAILED;
         }
 
-        boolean allSuitesSkipped = tests
+        boolean allSuitesAreSkipped = tests
                 .stream().allMatch(t -> t.getTestDetailDto().getStatus().equals(Status.SKIPPED));
 
-        if (allSuitesSkipped) {
+        if (allSuitesAreSkipped) {
             return Status.SKIPPED;
         } else {
             return Status.PASSED;

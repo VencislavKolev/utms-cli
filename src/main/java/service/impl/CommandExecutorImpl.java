@@ -5,6 +5,7 @@ import models.enums.StreamType;
 import models.jsonExport.TestDetailsInfoDto;
 import service.CommandExecutor;
 import models.yamlImport.ImportTestDetailDto;
+import util.Base64Util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,15 +35,20 @@ public class CommandExecutorImpl implements CommandExecutor {
         int exitValue = process.waitFor();
 
         originalOutput = this.getCommandOutput(process, StreamType.INPUT);
-        encodedOutput = this.encodeToBase64(originalOutput);
+        encodedOutput = Base64Util.encode(originalOutput);
 
         originalError = this.getCommandOutput(process, StreamType.ERROR);
-        encodedError = this.encodeToBase64(originalError);
+        encodedError = Base64Util.encode(originalError);
 
         Status status = this.getStatus(exitValue);
         LocalDateTime endDate = LocalDateTime.now();
 
         return new TestDetailsInfoDto(description, encodedOutput, encodedError, status, startDate, endDate);
+    }
+
+    @Override
+    public TestDetailsInfoDto getSkippedTest(ImportTestDetailDto detail) {
+        return new TestDetailsInfoDto(detail.getDescription(), null, null, Status.SKIPPED, null, null);
     }
 
     private Status getStatus(int exitValue) {
@@ -58,18 +64,13 @@ public class CommandExecutorImpl implements CommandExecutor {
     private Process getProcess(ImportTestDetailDto detail, Runtime run) throws IOException {
         Process process;
 
-        String operSys = System.getProperty("os.name").toLowerCase();
-        if (operSys.contains("win")) {
+        String operatingSystem = System.getProperty("os.name").toLowerCase();
+        if (operatingSystem.contains("win")) {
             process = run.exec(WIN_PREFIX + detail.getCommand());
         } else {
             process = run.exec(detail.getCommand());
         }
         return process;
-    }
-
-    @Override
-    public TestDetailsInfoDto getSkippedTest(ImportTestDetailDto detail) {
-        return new TestDetailsInfoDto(detail.getDescription(), null, null, Status.SKIPPED, null, null);
     }
 
     private String getCommandOutput(Process process, StreamType streamType) throws IOException {
@@ -93,9 +94,5 @@ public class CommandExecutorImpl implements CommandExecutor {
             streamReader = new InputStreamReader(process.getErrorStream());
         }
         return streamReader;
-    }
-
-    private String encodeToBase64(String originalOutput) {
-        return Base64.getEncoder().encodeToString(originalOutput.getBytes(StandardCharsets.UTF_8));
     }
 }

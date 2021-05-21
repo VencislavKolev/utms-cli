@@ -1,17 +1,16 @@
 project:
   name: UTMS
-  description: final task
+  description: Talent Boost Final Task
 suites:
   - BackEndTests:
       - Test1:
           enabled: true
-          command: echo Test
+          command: echo Hello Spring
       - Test2:
           enabled: true
           command: echo Test 2
-          description: This test does something too
+          description: Just another test
   - UITests:
       - Test3:
           enabled: false
-          command: echo Test 3
-          description: Hello world
+          command: echo Hello Angular

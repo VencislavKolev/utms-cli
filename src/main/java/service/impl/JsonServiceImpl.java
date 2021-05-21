@@ -9,6 +9,7 @@ import service.ReportGenerator;
 import util.JacksonMapper;
 import util.YamlUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -38,21 +39,32 @@ public class JsonServiceImpl implements JsonService {
 //        }
 
         //----------------------------------CHECK IF FILE EXISTS------------------------------------
-        String file = DEFAULT_FILE;
+        String filePath = DEFAULT_FILE;
 
         if (cmdMap.containsKey(CONFIG_CMD)) {
-            file = cmdMap.remove(CONFIG_CMD);
+            filePath = cmdMap.remove(CONFIG_CMD);
         }
+//-----------------------------------------------------------------------------------------
+//        if (getInputStream(filePath) == null) {
+//            return new ReportDto(NOT_FOUND_CONFIG);
+//        }
 
-        if (getInputStream(file) == null) {
+//        if (!this.yamlUtil.checkYamlCompatibility(getInputStream(filePath), YamlDto.class)) {
+//            return new ReportDto(INVALID_CONFIG_FILE);
+//        }
+//        YamlDto yamlDto = this.yamlUtil.getYamlDtoFromYamlFile(getInputStream(filePath));
+//-----------------------------------------------------------------------------------------
+        File file = new File(filePath);
+        System.out.println(file.getAbsolutePath());
+        if (!file.isFile()) {
             return new ReportDto(NOT_FOUND_CONFIG);
         }
 
-        if (!this.yamlUtil.checkYamlCompatibility(getInputStream(file), YamlDto.class)) {
+        if (!this.yamlUtil.checkYamlCompatibility(file, YamlDto.class)) {
             return new ReportDto(INVALID_CONFIG_FILE);
         }
-        YamlDto yamlDto = this.yamlUtil.getYamlDtoFromYamlFile(getInputStream(file));
-
+        YamlDto yamlDto = this.yamlUtil.getYamlDtoFromYamlFile(file);
+//-----------------------------------------------------------------------------------------
         ReportDto reportDto = this.reportGenerator.getReport(yamlDto, cmdMap);
         return reportDto;
     }

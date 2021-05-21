@@ -35,8 +35,8 @@ public class HttpClientService {
 
     private HttpResponse<String> getHttpResponse(HttpRequest request) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
-        HttpResponse<String> response =
-                client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         System.out.println(response.statusCode());
         System.out.println(response.body());
