@@ -13,6 +13,10 @@ public class ImportSuiteTestDto {
         this.tests = new HashMap<>();
     }
 
+    public ImportSuiteTestDto(Map<String, ImportTestDetailDto> tests) {
+        this.tests = tests;
+    }
+
     @JsonAnyGetter
     public Map<String, ImportTestDetailDto> getTests() {
         return tests;

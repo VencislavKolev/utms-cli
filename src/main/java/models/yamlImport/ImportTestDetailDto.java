@@ -9,6 +9,17 @@ public class ImportTestDetailDto {
     public ImportTestDetailDto() {
     }
 
+    public ImportTestDetailDto(boolean enabled, String command) {
+        this.enabled = enabled;
+        this.command = command;
+    }
+
+    public ImportTestDetailDto(boolean enabled, String command, String description) {
+        this.enabled = enabled;
+        this.command = command;
+        this.description = description;
+    }
+
     public boolean getEnabled() {
         return enabled;
     }
