@@ -3,6 +3,7 @@ package models.jsonExport;
 import models.enums.Status;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class TestDetailsInfoDto {
 
@@ -71,5 +72,22 @@ public class TestDetailsInfoDto {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        TestDetailsInfoDto that = (TestDetailsInfoDto) o;
+        return Objects.equals(description, that.description) && Objects.equals(output, that.output) && Objects.equals(error, that.error) && status == that.status && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(description, output, error, status, startDate, endDate);
     }
 }

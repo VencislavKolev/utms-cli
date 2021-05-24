@@ -9,15 +9,15 @@ import java.util.Set;
 
 import static common.GlobalConstants.*;
 
-public class CommandMapUtil /*implements CommandMap */ {
-    private final static Set<String> VALID_COMMANDS = Set.of(
+public class CommandMapUtil {
+    private static final Set<String> VALID_COMMANDS = Set.of(
             CONFIG_CMD, RUN_CMD,
             SUITE_CMD, TEST_CMD,
             CONFIG_CMD_SHORT, RUN_CMD_SHORT,
             SUITE_CMD_SHORT, TEST_CMD_SHORT
     );
 
-    private final static Set<String> ENVIRONMENT_COMMANDS = Set.of(
+    private static final Set<String> ENVIRONMENT_COMMANDS = Set.of(
             SERVER_CMD, DEBUG_CMD,
             SERVER_CMD_SHORT, DEBUG_CMD_SHORT
     );

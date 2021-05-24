@@ -25,67 +25,75 @@ public class TestGeneratorImpl implements TestGenerator {
     }
 
     @Override
-    public List<TestDto> generateTests(ImportSuiteTestDto[] suiteTests, String currSuiteName, Map<String, String> commands) throws IOException, InterruptedException {
+    public List<TestDto> generateTests(ImportSuiteTestDto[] suiteTests, String suiteToRun, Map<String, String> commands) throws IOException, InterruptedException {
         List<TestDto> tests = new ArrayList<>();
 
         Map<String, ImportTestDetailDto> stringTestDetailMap = this.extractTestDetailMap(suiteTests);
 
         for (var testMap : stringTestDetailMap.entrySet()) {
 
+            boolean getSkipped = true;
             TestDetailsInfoDto currentTest = new TestDetailsInfoDto();
 
             if (commands.isEmpty()) {
                 //RUN EVERYTHING -> NO SPECIAL REQUIREMENTS
                 currentTest = this.commandExecutor.testParser(testMap.getValue());
+                getSkipped = false;
 
             } else {
-                String suiteNameToRun;
-                String testNameToRun;
+                String suite;
+                String test;
 
                 if (commands.size() == 1) {
 
                     if (commands.containsKey(SUITE_CMD)) {
                         //RUN SUITE
-                        suiteNameToRun = commands.get(SUITE_CMD);
+                        suite = commands.get(SUITE_CMD);
 
-                        if (suiteNameToRun.equals(currSuiteName)) {
+                        if (suite.equals(suiteToRun)) {
                             currentTest = this.commandExecutor.testParser(testMap.getValue());
-                        } else {
+                            getSkipped = false;
+                        }/* else {
                             currentTest = this.commandExecutor.getSkippedTest(testMap.getValue());
-                        }
+                        }*/
 
                     } else if (commands.containsKey(TEST_CMD)) {
                         //RUN TEST
-                        testNameToRun = commands.get(TEST_CMD);
+                        test = commands.get(TEST_CMD);
 
-                        if (testNameToRun.equals(testMap.getKey())) {
+                        if (test.equals(testMap.getKey())) {
                             //IF NAMES MATCH -> RUN TEST and EXPLICITLY SET ENABLED TRUE
 
                             testMap.getValue().setEnabled(true);
                             currentTest = this.commandExecutor.testParser(testMap.getValue());
-                        } else {
+                            getSkipped = false;
+                        } /*else {
                             //IF NAMES DIFFER -> GET SKIPPED TEST
 
                             currentTest = this.commandExecutor.getSkippedTest(testMap.getValue());
-                        }
+                        }*/
                     }
 
                 } else {
-                    suiteNameToRun = commands.get(SUITE_CMD);
-                    testNameToRun = commands.get(TEST_CMD);
-                    //RUN TEST IN SUITE
+                    //COMMANDS SIZE > 1 && RUN TEST IN GIVEN SUITE
+                    suite = commands.get(SUITE_CMD);
+                    test = commands.get(TEST_CMD);
 
-                    if (suiteNameToRun.equals(currSuiteName) && testNameToRun.equals(testMap.getKey())) {
+                    if (suite.equals(suiteToRun) && test.equals(testMap.getKey())) {
                         //IF BOTH MATCH -> RUN TEST and EXPLICITLY SET ENABLED TRUE
 
                         testMap.getValue().setEnabled(true);
                         currentTest = this.commandExecutor.testParser(testMap.getValue());
+                        getSkipped = false;
 
-                    } else {
+                    } /*else {
                         //IF DON'T MATCH -> GET SKIPPED TEST
                         currentTest = this.commandExecutor.getSkippedTest(testMap.getValue());
-                    }
+                    }*/
                 }
+            }
+            if (getSkipped){
+                currentTest = this.commandExecutor.getSkippedTest(testMap.getValue());
             }
             TestDto testDto = new TestDto(testMap.getKey(), currentTest);
             tests.add(testDto);
